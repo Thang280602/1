@@ -1,0 +1,134 @@
+.layout {
+    width: 1909px;
+    height: 5161px;
+    position: absolute;
+    top: 82px;
+    left: -4px;
+    padding: 0px 447px 3825px 650px;
+    gap: 0px;
+    opacity: 0px;
+    background: #66708599;
+    z-index: 25;
+}
+
+.index {
+    z-index: 20;
+}
+
+.table3 {
+    position: absolute;
+    width: 343px;
+    height: 800px;
+    top: 97px;
+    left: 980px;
+    padding: 24px 0px 0px 0px;
+    gap: 25px;
+    border-radius: 8px;
+    opacity: 0px;
+    background: #FFFFFF;
+    border: 0.5px solid #989898;
+    box-shadow: 0px 4px 22px 0px #0000001A;
+    z-index: 30;
+}
+
+.table4 {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 84.97px;
+    left: 1026px;
+    gap: 0px;
+
+    transform: rotate(45deg);
+    background: #FFFFFF;
+
+    border-color: #989898;
+    z-index: 31;
+
+}
+
+.item-cartsp {
+    width: 295px;
+    height: 120px;
+    gap: 8px;
+    opacity: 0px;
+    background-color: antiquewhite;
+    margin-left: 7%;
+
+}
+
+.item-cartname {
+    font-weight: bold;
+    font-size: 110%;
+    margin-left: 5%;
+    padding-top: 2%;
+}
+
+.item-ship {
+    margin-top: -7%;
+    margin-left: 5%;
+}
+
+.deleteitem img {
+    width: 60%;
+    margin-top: -100%;
+    margin-left: 35%;
+}
+
+.deleteandprice {
+    display: flex;
+}
+
+.priceproduct1 span {
+    font-weight: bold;
+    font-size: 130%;
+    color: blueviolet;
+
+}
+
+.priceproduct1 {
+    margin-top: -12%;
+    margin-left: 52%;
+}
+
+.contentbut1 {
+    display: flex;
+    align-items: center;
+
+}
+
+.textbut1 {
+    font-size: 80%;
+    margin-left: 18%;
+    color: blueviolet;
+}
+
+.iconbut1 img {
+    width: 60%;
+}
+.iconbut1{
+    margin-left: 10%;
+}
+.contentbut1 {
+    width: 150px;
+    height: 30px;
+}
+
+.buttonall1 {
+    margin-left: 24%;
+    border-radius: 8px;
+    margin-top: 8%;
+}
+.textnhan span{
+    margin-left: 7%;
+}
+.textcacu{
+    display: flex;
+}
+.textnhan{
+    width: 60%;
+    margin-left: 5%;
+}
+.numbercacu{
+    margin-left: 10%;
+}

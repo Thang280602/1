@@ -1,0 +1,80 @@
+.form{
+    margin-left: -21%;
+}
+.text2 {
+    margin-top: -10%;
+    margin-left: 10%;
+}
+
+.icon {
+    margin-top: 3%;
+    margin-left: 13%;
+}
+
+.icon img {
+    width: 4%;
+}
+
+.emailform label {
+    margin-bottom: 0.5%;
+}
+
+.emailform input {
+    border-radius: 6px;
+    width: 32%;
+}
+
+.passform {
+    margin-top: 2%;
+}
+
+.passform label {
+    margin-bottom: 0.5%;
+}
+
+.passform input {
+    border-radius: 6px;
+    width: 32%;
+}
+
+.check {
+    margin-top: 2%;
+    display: flex;
+}
+
+.forgot {
+    margin-left: 11%;
+}
+
+.buttonSubmit {
+    margin-top: 4%;
+    margin-left: 4%;
+    width: 23%;
+    border-radius: 5px;
+    background-color: rgb(119, 119, 226);
+}
+
+.Signin {
+    color: white;
+}
+.registerfromlogin{
+    margin-top: 2%;
+}
+.registerfromlogin span{
+    margin-left: 6%;
+}
+.registerfromlogin a{
+    color: red;
+    cursor: pointer;
+    margin-left: 13%;
+}
+.avt{
+    position: relative;
+    top: -637px;
+    right: -375px;
+
+}
+.avt img{
+    width: 50%;
+    height: 80%;
+}

@@ -1,0 +1,265 @@
+.cartItem{
+    display: flex;
+    width:100%;
+    background-color: antiquewhite;
+    margin-top: 1%;
+    box-shadow: 20px rgb(48, 80, 62);
+}
+.chia{
+    display: flex;
+}
+.caculrator{
+    width: 39%;
+   margin-left: 10%;
+   margin-top: 5%;
+    background-color: aqua;
+   height: 500px;
+}
+.listcart{
+    margin-top: 5%;
+}
+.summary{
+    width: 40%;
+}
+.heartcart{
+    width: 15%;
+    position: relative;
+    bottom: -22%;
+}
+.imganh img{
+    width: 80%;
+    padding-left: 0%;
+}
+.heartcart img{
+    width: 60%;
+    margin-left: 45%;
+}
+.text5{
+    margin-top: 7%;
+    text-align: center;
+}
+.text5 span{
+    font-size: 250%;
+    font-weight: bold;
+    color: blueviolet;
+}
+.text6{
+    margin-top: 3%;
+    text-align: center;
+    font-size: 120%;
+}
+.deletecart img{
+    width: 60%;
+    margin-left: 33%;
+    margin-top: 16%;
+}
+.imgcart{
+    margin-top: -5%;
+}
+.productname{
+    display: flex;
+}
+.action{
+    display: flex;
+    margin-top: 10%;
+}
+.addcart input{
+    width: 80%;
+    text-align: center;
+    margin-left: -102%;
+}
+.textname{
+    font-weight: bold;
+    font-size: 110%;
+}
+.textdescripstion{
+    margin-bottom: 10%;
+}
+.cartaction{
+    margin-left: -50px;
+    height: 50%;
+}
+.addcart{
+    margin-left: 62%;
+}
+.addcart img{
+    width: 80%;
+}
+.priceproduct{
+    width: 150%;
+}
+.textOrder{
+    margin-top: 10%;
+    font-size: 150%;
+    font-weight: bold;
+    text-align: center;
+}
+.textdis{
+    margin-left: 10%;
+}
+.code{
+    margin-left: 10%;
+    margin-top: 2%;
+
+}
+.code input{
+    border-radius: 8px;
+    width: 60%;
+}
+.code button{
+    margin-left: 8%;
+    border-radius: 8px;
+    width: 15%;
+    cursor: pointer;
+}
+.discripstion{
+    display: flex;
+    margin-top: 10%;
+}
+.tieudethanhtoan{
+    margin-left: 10%;
+}
+.tieudethanhtoan span{
+    margin-top: 10%;
+}
+.thanhtoan{
+    margin-left: 35%;
+}
+.total{
+    display: flex;
+    margin-top: 10%;
+}
+.textTotal{
+    margin-left: 10%;
+}
+.gtTotal{
+    margin-left: 58%;
+}
+.button-total{
+    margin-top: 10%;
+    margin-left: 14%;
+}
+.button-total button{
+    width: 80%;
+    border-radius: 8px;
+    background-color: violet;
+    color: white;
+
+}
+.backtoindex{
+    display: flex;
+    justify-content: center;
+    margin-top: 6%;
+}
+.iconback img{
+    width: 60%;
+}
+.textback{
+    text-align: center;
+    margin-top: 0.4%;
+    margin-left: -2%;
+    color: blue;
+}
+.last{
+    margin-top: 4%;
+    margin-bottom: 20%;
+}
+.textlast{
+    font-size: 210%;
+    font-weight: bold;
+    margin-bottom: 7%;
+}
+.imgIconSP{
+    background-color: antiquewhite;
+    height: 200px;
+}
+.imgSP img{
+    width: 74%;
+    margin-left: 15%;
+    margin-top: 20%;
+}
+.iconsp{
+    display: flex;
+    margin-top: -94%;
+    margin-left: 62%;
+}
+.iconheartsp img{
+    width: 50%;
+}
+.iconcartsp img{
+    width: 50%;
+}
+.iconcartsp{
+    margin-left: -15%;
+}
+.onestar img{
+    width: 50%;
+}
+.halfstar img{
+    width: 50%;
+    
+}
+.namesp{
+    margin-top: 10%;
+}
+.namesp span{
+    font-weight: bold;
+    font-size: 110%;
+}
+.informationsp{
+margin-left: 0.1%;
+}
+.onestar{
+    margin-right: -6%;
+}
+.starsp {
+    display: flex;
+}
+.SP{
+    border: 1px solid #F7F5F7;
+    border-radius: 8px;
+    margin-left: 10%;
+}
+@media (max-width: 767px) {
+    .carousel-inner .carousel-item > div {
+        display: none;
+    }
+    .carousel-inner .carousel-item > div:first-child {
+        display: block;
+    }
+}
+
+.carousel-inner .carousel-item.active,
+.carousel-inner .carousel-item-next,
+.carousel-inner .carousel-item-prev {
+    display: flex;
+}
+
+/* medium and up screens */
+@media (min-width: 768px) {
+    
+    .carousel-inner .carousel-item-end.active,
+    .carousel-inner .carousel-item-next {
+      transform: translateX(25%);
+    }
+    
+    .carousel-inner .carousel-item-start.active, 
+    .carousel-inner .carousel-item-prev {
+      transform: translateX(-25%);
+    }
+}
+
+.carousel-inner .carousel-item-end,
+.carousel-inner .carousel-item-start { 
+  transform: translateX(0);
+}
+.carousel-control-next, .carousel-control-prev {
+    top:160% !important;
+
+}
+.carousel-control-prev{
+    margin-left: 13% !important;
+}
+.carousel-control-next{
+    margin-right: 12% !important;
+}

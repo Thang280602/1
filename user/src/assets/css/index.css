@@ -1,0 +1,387 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.bannerimg {
+    width: 500px;
+    height: 500px;
+}
+
+.index {
+    margin-bottom: 300px;
+}
+
+.bannerimg {
+    width: 1908px;
+    height: 1000px;
+    margin-left: -385px;
+}
+
+.text {
+    text-align: center;
+    margin-left: 444px;
+    padding-bottom: 100px;
+    color: darkorchid;
+    display: flex;
+    align-items: center;
+    height: 500px;
+}
+
+.text1 {
+    padding-bottom: 100px;
+}
+
+.imageProduct img {
+    width: 80%;
+    height: 80%;
+    margin-left: 35px;
+}
+
+.product {
+    background-color: antiquewhite;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    margin-left: 50px;
+    margin-top: 30px;
+}
+
+.information {
+    background-color: red;
+    height: 100px;
+    width: 100%;
+    border-radius: 0px 0px 20px 20px;
+}
+
+.icon {
+    display: flex;
+    margin-left: -140px;
+    margin-top: -50px;
+    padding-bottom: 30px;
+}
+
+.background1 {
+    background-color: wheat;
+    height: 30px;
+    width: 30px;
+    position: relative;
+    bottom: -30px;
+    margin-left: -5px;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.background2 {
+    background-color: wheat;
+    height: 30px;
+    width: 30px;
+    position: relative;
+    bottom: -28px;
+    margin-left: -3px;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.iconbag img {
+    width: 50% !important;
+    height: 50%;
+    position: relative;
+    z-index: 2;
+}
+
+.iconheart img {
+    width: 50% !important;
+    height: 50%;
+    position: relative;
+    z-index: 2;
+}
+
+.productName span {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 28px;
+
+}
+
+.price span {
+    font-size: 20px;
+    margin-left: 28px;
+}
+
+.productName {
+    padding-top: -20px;
+    height: 50px;
+    padding-top: 20px;
+}
+
+.price {
+    margin-top: 5px;
+}
+
+.productAll {
+    margin-top: -240px;
+}
+
+@media (max-width: 767px) {
+    .carousel-inner .carousel-item>div {
+        display: none;
+    }
+
+    .carousel-inner .carousel-item>div:first-child {
+        display: block;
+    }
+}
+
+.carousel-inner .carousel-item.active,
+.carousel-inner .carousel-item-next,
+.carousel-inner .carousel-item-prev {
+    display: flex;
+}
+
+/* medium and up screens */
+@media (min-width: 768px) {
+
+    .carousel-inner .carousel-item-end.active,
+    .carousel-inner .carousel-item-next {
+        transform: translateX(25%);
+    }
+
+    .carousel-inner .carousel-item-start.active,
+    .carousel-inner .carousel-item-prev {
+        transform: translateX(-25%);
+    }
+}
+
+.carousel-inner .carousel-item-end,
+.carousel-inner .carousel-item-start {
+    transform: translateX(0);
+}
+
+.iconnext {
+    background-color: black;
+}
+
+.right {
+    margin-right: -50px;
+}
+
+.categoryText h1 {
+    text-align: center;
+    margin-top: 80px;
+    margin-left: -85px;
+    color: darkorchid;
+    font-size: 45px;
+}
+
+.category {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+
+    margin-left: -170px;
+}
+
+.category-item {
+    margin-left: 50px;
+    text-decoration: none;
+
+}
+
+.category-item a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.category-item a :hover {
+    text-decoration: underline;
+}
+
+.product-item {
+    display: flex;
+    margin-top: 50px;
+}
+
+.icon-item {
+    display: flex;
+    margin-left: 130px;
+    margin-top: -50px;
+    padding-bottom: 30px;
+}
+
+.button-product {
+    margin-top: -40px;
+    margin-left: 538px;
+    position: relative;
+    z-index: 6;
+}
+
+.button-item {
+    border-radius: 8px;
+    height: 50px;
+    width: 100px;
+    background-color: blueviolet;
+    color: white;
+}
+
+.product-hidden {
+    display: flex;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(251, 251, 251, 0.8) 44.79%, #FFFFFF 100%);
+    width: 1262px;
+    height: 250px;
+    top: 2645px;
+    left: 263px;
+    gap: 0px;
+    opacity: 0px;
+    position: absolute;
+    z-index: 5;
+}
+
+.trending {
+    align-items: center;
+}
+
+.textTrending {
+    margin-top: 100px;
+    margin-left: 458px;
+}
+
+.textTrending h1 {
+    color: darkblue;
+}
+
+.portTrend {
+    background: #F1F0FF;
+    width: 1905px;
+    height: 800px;
+    top: 3054px;
+    gap: 0px;
+    opacity: 0px;
+    margin-left: -378px;
+
+
+
+}
+
+.back img {
+    width: 25%;
+    margin-top: 8%;
+    margin-left: 10%;
+}
+
+.productNo img {
+    width: 40%;
+}
+
+.productNo {
+    position: relative;
+    bottom: 70%;
+    left: 6%;
+    width: 94%;
+}
+
+.discount {
+    height: 100px;
+    width: 250px;
+    background-color: antiquewhite;
+    border-radius: 8px;
+    padding-top: 1%;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-top: -56%;
+    opacity: 0.8;
+    left: -25%;
+}
+
+.title1 {
+    font-weight: bold;
+}
+
+.textTrend {
+    margin-left: 50%;
+    margin-top: -11%;
+    width: 80%;
+}
+
+.textTrend1 {
+    font-size: 400%;
+    color: darkorchid;
+    font-weight: bold;
+}
+
+.textTrend2 {
+    margin-top: 10%;
+    font-size: 150%;
+    color: black;
+    font-weight: bold;
+}
+
+.buttonTe {
+    position: absolute;
+    z-index: 10;
+    left: 60%;
+    margin-top: 10%;
+}
+
+.buttonTe button {
+    width: 180%;
+    padding: 20%;
+    border-radius: 8px;
+
+}
+
+.buttonTe span {
+    font-weight: 200%;
+    font-size: 120%;
+    color: blueviolet;
+}
+
+.new {
+    position: relative;
+    z-index: 15;
+    margin-top: 50%;
+    margin-left: 43%;
+}
+
+.new h1 {
+    color: darkblue;
+}
+
+.backnew {
+    width: 370px;
+    height: 270px;
+    top: 3796px;
+    left: 125px;
+    gap: 0px;
+    opacity: 0px;
+    background: #EEEFFB;
+
+}
+.pro{
+    width: 200%;
+    margin-left: -85%;
+    margin-top: 15%;
+}
+.newproduct{
+    
+    display: flex;
+    justify-content: space-around;
+}
+.productnew img{
+    width: 80%;
+    height: 80%;
+    margin-top: 20%;
+    margin-left: 18%;
+}
+.read-more{
+    margin-top: -48%;
+    margin-left: 10%;
+}
+.text-new{
+    margin-top: -24%;
+    margin-left: 5%;
+}
+.text-new h2{
+    color: darkslategray;
+}

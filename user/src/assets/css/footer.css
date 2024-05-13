@@ -1,0 +1,11 @@
+.footer{
+    background-color: antiquewhite;
+    height: 250px;
+    width: 166%;
+    margin-left: -33%;
+    text-align: center;
+    margin-top: -14%;
+}
+.footer h1{
+    padding-top: 3%;
+}
