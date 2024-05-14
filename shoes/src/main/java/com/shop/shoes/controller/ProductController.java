@@ -2,7 +2,9 @@ package com.shop.shoes.controller;
 
 import com.shop.shoes.dto.ProductDTO;
 import com.shop.shoes.model.Product;
+import com.shop.shoes.model.ProductDetail;
 import com.shop.shoes.service.ProductService;
+import com.shop.shoes.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -16,12 +18,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,7 +37,8 @@ import java.util.List;
 public class ProductController {
     @Autowired
     public final ProductService productService;
-
+    @Autowired
+    public final StorageService storageService;
     @Operation(summary = "Lấy danhh sách tất cả sản phẩm",
             description = "Trả về danh sách sản phẩm")
     @ApiResponses(value = {
@@ -51,7 +57,15 @@ public class ProductController {
         Product productDTO = productService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(productDTO);
     }
-
+    @Operation(summary = "Lấy danhh sách 8   sản phẩm",
+            description = "Trả về danh sách  sản phẩm")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trả về danh sách chi tiết sản phẩm")})
+    @GetMapping("/getFirst8Products")
+    public ResponseEntity<List<Product>> getFirst8Products() {
+        List<Product> productDetailDTO = productService.getFirst8Products();
+        return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
+    }
     @Operation(summary = "Thêm sản phẩm",
             description = "Trả về sản phẩm và thông tin message trạng thái")
     @ApiResponses(value = {
@@ -60,9 +74,10 @@ public class ProductController {
     })
     @Secured("ROLE_ADMIN")
     @PostMapping("/add")
-    public ResponseEntity<Product> create(@Valid @RequestBody ProductDTO productDTO) {
-
-        Product responseDTO = productService.createProduct(productDTO);
+    public ResponseEntity<Product> create(@Valid @ModelAttribute ProductDTO productDTO,@RequestParam("fileImage") MultipartFile file) {
+        this.storageService.store(file);
+        String fileName = file.getOriginalFilename();
+        Product responseDTO = productService.createProduct(productDTO,fileName);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
@@ -77,8 +92,10 @@ public class ProductController {
     @Parameters({@Parameter(name = "ProductDTO", description = "Thông tin cần update "),
             @Parameter(name = "id", description = "id của sản phẩm  cần update")})
     @PutMapping("/update/{id}")
-    public ResponseEntity<Product> updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long id) {
-        Product reponseDTO = productService.updateProduct(id, productDTO);
+    public ResponseEntity<Product> updateProduct(@Valid @ModelAttribute ProductDTO productDTO, @PathVariable Long id ,@RequestParam("fileImage") MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        this.storageService.store(file);
+        Product reponseDTO = productService.updateProduct(id, productDTO,fileName);
         return ResponseEntity.status(HttpStatus.OK).body(reponseDTO);
     }
 

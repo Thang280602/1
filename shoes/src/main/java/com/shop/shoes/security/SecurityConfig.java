@@ -60,7 +60,7 @@ public class SecurityConfig extends Exception{
 //                    req.requestMatchers(SecurityConstant.PRIVATE_URIS_ROLE_ADMIN).hasAuthority(RoleEnum.ROLE_ADMIN.toString());
                     req.requestMatchers(HttpMethod.GET,"/users/*")
                             .hasAnyRole(RoleEnum.USER.name(),RoleEnum.ADMIN.name());
-                    req.requestMatchers(HttpMethod.POST,"/users/add").permitAll();
+                     req.requestMatchers(HttpMethod.POST,"/users/add").permitAll();
                     req.requestMatchers("/users","/users/**")
                             .hasAnyRole(RoleEnum.ADMIN.name());
                     req.anyRequest()

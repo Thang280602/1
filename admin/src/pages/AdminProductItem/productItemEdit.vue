@@ -11,7 +11,6 @@ const productId = ref(route.params.id);
 const discount = ref('');
 const image = ref('');
 const quantity = ref('');
-const price = ref('');
 const colorId = ref(null);
 const sizeId = ref(null);
 const productDetailStatus = ref('1');
@@ -36,7 +35,6 @@ const getProductDetail = async () => {
         // Gán dữ liệu vào các biến
         discount.value = productDetail.discount;
         quantity.value = productDetail.quantity;
-        price.value = productDetail.price;
         colorId.value = productDetail.colorID;
         sizeId.value = productDetail.sizeID;
         productDetailStatus.value = productDetail.status;
@@ -76,7 +74,6 @@ const handleSubmit = async () => {
         const formData = new FormData();
         formData.append('fileImage', file.value);
         formData.append('discount', discount.value);
-        formData.append('price', price.value);
         formData.append('status', productDetailStatus.value);
         formData.append('quantity', quantity.value);
         formData.append('productID', selectedProduct.value.id);
@@ -166,7 +163,6 @@ onMounted(() => {
 const resetFields = () => {
     discount.value = '';
     quantity.value = '';
-    price.value = '';
     colorId.value = '';
     sizeId.value = '';
     productDetailStatus.value = '1';
@@ -225,18 +221,6 @@ const resetFields = () => {
                         <label for="ds" style="margin-right: 6%;">Active</label>
                         <input v-model="productDetailStatus" type="radio" value="0" name="productDetailStatus" />
                         <label for="ds">Hidden</label>
-                    </VCol>
-                </VRow>
-            </VCol>
-            <VCol cols="12">
-                <VRow no-gutters>
-                    <!-- 👉 First Name -->
-                    <VCol cols="12" md="3">
-                        <label for="price">Price</label>
-                    </VCol>
-
-                    <VCol cols="12" md="6">
-                        <VTextField id="price" v-model="price" placeholder="100$,200$..." persistent-placeholder />
                     </VCol>
                 </VRow>
             </VCol>

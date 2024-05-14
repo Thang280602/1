@@ -25,6 +25,12 @@
                         CategoryName
                     </th>
                     <th>
+                        Price
+                    </th>
+                    <th>
+                        Image
+                    </th>
+                    <th>
                         Action
                     </th>
                 </tr>
@@ -49,6 +55,12 @@
                     </td>
                     <td class="text-center">
                         {{ product.category.categoryName }}
+                    </td>
+                    <td class="text-center">
+                        {{ product.price }}
+                    </td>
+                    <td class="text-center">
+                        <img :src="getFullImageUrl(product.image)" alt="Product Image" width="100" height="100" />
                     </td>
                     <td>
                         <div class="actionPro">
@@ -85,6 +97,9 @@ export default {
         this.getProducts();
     },
     methods: {
+        getFullImageUrl(imagePath) {
+            return `http://localhost:8080/uploads/${imagePath}`;
+        },
         async getProducts() {
             try {
                 debugger

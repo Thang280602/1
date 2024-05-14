@@ -8,7 +8,6 @@ const editorData = ref('<p>Please enter description here</p>');
 const discount = ref('');
 const image = ref('');
 const quantity = ref('');
-const price = ref('');
 const productId = ref(null);
 const colorId = ref(null);
 const sizeId = ref(null);
@@ -44,7 +43,6 @@ const handleSubmit = async () => {
         formData.append('fileImage', file.value);
         console.log('image', file);
         formData.append('discount', discount.value);
-        formData.append('price', price.value);
         formData.append('status', parseInt(productDetailStatus.value));
         formData.append('quantity', quantity.value);
         formData.append('productID', productId.value);
@@ -67,7 +65,7 @@ const handleSubmit = async () => {
             text: 'Product added successfully!',
             confirmButtonText: 'OK'
         });
-        router.push('/product');
+        router.push('/productItem');
         resetFields();
     } catch (error) {
         console.error('Error adding product:', error);
@@ -116,7 +114,6 @@ onMounted(() => {
 
 const resetFields = () => {
     discount.value = '';
-    price.value = '';
     quantity.value = '';
 
 };
@@ -173,18 +170,7 @@ const resetFields = () => {
                     </VCol>
                 </VRow>
             </VCol>
-            <VCol cols="12">
-                <VRow no-gutters>
-                    <!-- 👉 First Name -->
-                    <VCol cols="12" md="3">
-                        <label for="price">Price</label>
-                    </VCol>
 
-                    <VCol cols="12" md="6">
-                        <VTextField id="price" v-model="price" placeholder="100$,200$..." persistent-placeholder />
-                    </VCol>
-                </VRow>
-            </VCol>
             <VCol cols="12">
                 <VRow no-gutters>
                     <!-- 👉 First Name -->

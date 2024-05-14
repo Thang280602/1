@@ -12,14 +12,19 @@ const categoryId = ref(null);
 const route = useRoute();
 const productStatus = ref('1');
 const router = useRouter();
+const file = ref(null);
+const imageName = ref('');
+const image = ref('');
+const price = ref('');
 const categories = ref([]);
 const selectedCategory = ref('');
 const productId = ref(route.params.id);
+const imagePreviewUrl = ref('');
 const handleCategoryChange = () => {
     categoryId.value = selectedCategory.value.id;
 };
 const loadProduct = async () => {
-    debugger
+
     try {
 
         const response = await axios.get(`http://localhost:8080/product/get/${productId.value}`);
@@ -37,18 +42,26 @@ const loadProduct = async () => {
 onMounted(loadProduct);
 
 const handleSubmit = async () => {
-    debugger
+
     try {
         const cleanedDescription = editorData.value.replace(/(<([^>]+)>)/gi, "");
-        const productData = {
-            id: productId.value,
-            productName: productName.value,
-            productAddress: productAddress.value,
-            description: cleanedDescription,
-            categoryID: categoryId.value,
-            productStatus: productStatus.value === '1' ? true : false
-        };
-        const response = await axios.put(`http://localhost:8080/product/update/${productId.value}`, productData);
+        const formData = new FormData();
+        formData.append('fileImage', file.value);
+        formData.append('id', productId.value);
+        formData.append('productName', productName.value);
+        formData.append('productAddress', productAddress.value);
+        formData.append('description', cleanedDescription);
+        formData.append('categoryID', categoryId.value);
+        formData.append('productStatus', productStatus.value === '1' ? true : false);
+        formData.append('price', price.value);
+
+
+        const response = await axios.put(`http://localhost:8080/product/update/${productId.value}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
         console.log('Product added:', response.data);
         Swal.fire({
             title: "Do you want to save the changes?",
@@ -67,7 +80,7 @@ const handleSubmit = async () => {
 };
 const getCategories = async () => {
     try {
-        const response = await axios.get('http://localhost:8086/category');
+        const response = await axios.get('http://localhost:8080/category');
         categories.value = response.data;
         console.log(categories.value);
     } catch (error) {
@@ -78,7 +91,17 @@ const getCategories = async () => {
 onMounted(() => {
     getCategories();
 });
-
+const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    file.value = selectedFile;
+    imageName.value = selectedFile.name;
+    image.value = selectedFile;
+    const reader = new FileReader();
+    reader.onload = () => {
+        imagePreviewUrl.value = reader.result;
+    };
+    reader.readAsDataURL(selectedFile);
+};
 
 const resetFields = () => {
     productName.value = '';
@@ -91,7 +114,7 @@ const resetFields = () => {
 
 <template>
     <VForm @submit.prevent="handleSubmit">
-        <input type="hidden" v-model="productId" value="productId">
+        <input type="hidden" v-model="productId">
         <VRow>
             <VCol cols="12">
                 <VRow no-gutters>
@@ -106,7 +129,20 @@ const resetFields = () => {
                     </VCol>
                 </VRow>
             </VCol>
-
+            <VCol cols="12">
+                <VRow no-gutters>
+                    <VCol cols="12" md="3">
+                        <label for="image">Image</label>
+                    </VCol>
+                    <VCol cols="12" md="6">
+                        <input type="file" @change="handleFileChange" name="file" accept="image/*" />
+                    </VCol>
+                    <!-- Hiển thị hình ảnh đã chọn -->
+                    <VCol cols="12" v-if="imagePreviewUrl" style="margin-left: 25%;margin-top: 1%;">
+                        <img :src="imagePreviewUrl" alt="Selected Image" style="max-width: 100%; max-height: 150px;" />
+                    </VCol>
+                </VRow>
+            </VCol>
             <VCol cols="12">
                 <VRow no-gutters>
                     <!-- 👉 Email -->
@@ -132,6 +168,18 @@ const resetFields = () => {
                     <VCol cols="12" md="6">
                         <VTextField id="productAddress" v-model="productAddress"
                             placeholder="Nam Định , Hà Nội, Quảng Ninh...." persistent-placeholder />
+                    </VCol>
+                </VRow>
+            </VCol>
+            <VCol cols="12">
+                <VRow no-gutters>
+                    <!-- 👉 First Name -->
+                    <VCol cols="12" md="3">
+                        <label for="price">Price</label>
+                    </VCol>
+
+                    <VCol cols="12" md="6">
+                        <VTextField id="price" v-model="price" placeholder="100$,200$..." persistent-placeholder />
                     </VCol>
                 </VRow>
             </VCol>

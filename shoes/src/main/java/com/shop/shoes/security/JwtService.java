@@ -34,8 +34,9 @@ public class JwtService {
      * @param userName userName từ token
      * @return thành công trả về token
      */
-    public TokenDTO generateToken(String userName) {
+    public TokenDTO generateToken(String userName,String role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
         TokenDTO tokenDTO=TokenDTO.builder().token(createToken(claims, userName)).build();
         return tokenDTO;
     }

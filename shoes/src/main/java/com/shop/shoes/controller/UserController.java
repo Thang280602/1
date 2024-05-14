@@ -118,8 +118,8 @@ public class UserController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserDTO> insertUser(@Valid @RequestBody UserDTO userDTO , HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
-        UserDTO userDTONew = userService.create(userDTO);
-//        userService.register(userDTONew,getSiteURL(request));
+
+        UserDTO userDTONew = userService.create(userDTO,getSiteURL(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(userDTONew);
     }
 

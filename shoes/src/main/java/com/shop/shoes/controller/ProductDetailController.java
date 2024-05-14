@@ -42,10 +42,6 @@ public class ProductDetailController {
     public final ProductDetailService productDetailService;
     @Autowired
     public final StorageService storageService;
-    @Autowired
-    private final ImageProductSevice imageProductSevice;
-    @Autowired
-    private final ProductDetailUtils productDetailUtils;
 
     @Operation(summary = "Lấy danhh sách tất cả chi tiết sản phẩm",
             description = "Trả về danh sách chi tiết sản phẩm")
@@ -56,6 +52,7 @@ public class ProductDetailController {
         List<ProductDetail> productDetailDTO = productDetailService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
+
     @Operation(summary = "Lấy sản phẩm theo id",
             description = "Trả về chi tiết sản phẩm")
     @ApiResponses(value = {

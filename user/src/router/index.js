@@ -28,6 +28,11 @@ const router = createRouter({
       component:Footer
     },
     {
+      path:'/detail/:id',
+      name:'detail',
+      component:Detail
+    },
+    {
       path:'/login',
       name:'login',
       component:Login
@@ -52,11 +57,7 @@ const router = createRouter({
       name:'carthover',
       component: CartHover
     },
-    {
-      path:'/detail',
-      name:'detail',
-      component: Detail
-    },
+ 
     
   ]
 })

@@ -15,17 +15,17 @@ const isPasswordVisible = ref(false);
 
 async function login() {
   try {
-
+    debugger
     const response = await axios.post('http://localhost:8080/auth/generateToken', {
       username: form.value.username,
       authenticationCode: form.value.password,
     });
 
     const token = response.data.token;
-
+    console.log('role', decodeToken.role)
     const decodedToken = decodeToken(token);
-    console.log(decodedToken);
-    if (decodedToken.sub === 'admin') {
+    console.log(decodedToken.sub);
+    if (decodedToken.role === 'ROLE_ADMIN') {
       localStorage.setItem('token', token);
       Swal.fire({
         position: "top-end",

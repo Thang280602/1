@@ -2,14 +2,44 @@
 import { onMounted } from 'vue';
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
-const handleButtonClick = () => {
+
+
+import { ref } from 'vue';
+import axios from 'axios';
+
+const products = ref([]);
+
+const loadFirst8Products = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/product/getFirst8Products');
+        products.value = response.data;
+    } catch (error) {
+        console.error('Error loading first 8 products:', error);
+    }
+};
+
+const loadMoreProducts = async () => {
     document.getElementById('loadMoreButton').style.display = 'none';
     showHiddenContent();
-}
+    try {
+        const response = await axios.get('http://localhost:8080/product');
+        products.value = response.data;
+    } catch (error) {
+        console.error('Error loading more products:', error);
+    }
+};
+
+
+onMounted(() => {
+    loadFirst8Products();
+});
 
 const showHiddenContent = () => {
     document.querySelector('.product-hidden').style.display = 'none';
 }
+const getImageUrl = (relativePath) => {
+    return `http://localhost:8080/uploads/${relativePath}`;
+};
 onMounted(() => {
     const items = document.querySelectorAll('.carousel .carousel-item');
     items.forEach((el) => {
@@ -26,7 +56,6 @@ onMounted(() => {
         }
     });
 });
-
 
 </script>
 <template>
@@ -175,14 +204,7 @@ onMounted(() => {
                                     </div>
                                 </div>
                             </div>
-                            <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button"
-                                data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon iconnext" aria-hidden="true"></span>
-                            </a>
-                            <a class="carousel-control-next bg-transparent w-aut right" href="#recipeCarousel"
-                                role="button" data-bs-slide="next">
-                                <span class="carousel-control-next-icon iconnext " aria-hidden="true"></span>
-                            </a>
+
                         </div>
                     </div>
                     <div class="categoryText">
@@ -217,300 +239,38 @@ onMounted(() => {
                     </div>
                     <div class="product-item">
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
+
+                            <div class="col-md-3" v-for="product in products" :key="product.id">
+                                <a href='/detail/${product.id}' style="text-decoration: none;">
+                                    <div class="product">
+                                        <div class="imageProduct"><img :src="getImageUrl(product.image)" alt=""></div>
+                                        <div class="icon-item">
+                                            <div class="icon1">
+                                                <div class="background1"></div>
+                                                <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
+                                            </div>
+                                            <div class="icon2">
+                                                <div class="background2"></div>
+                                                <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
+                                            </div>
                                         </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
+                                        <div class="information">
+                                            <div class="productName" >
+                                                <span style="color: darkslategray;">{{ product.productName }}</span>
+                                            </div>
+                                            <div class="price">
+                                                <span style="color: darkslategray;">Price: {{ product.price }} VND</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product">
-                                    <div class="imageProduct"><img src="/src/assets/img/product.png" alt="">
-                                    </div>
-                                    <div class="icon-item">
-                                        <div class="icon1">
-                                            <div class="background1"></div>
-                                            <div class="iconbag"><img src="/src/assets/img/bag.png"></div>
-                                        </div>
-                                        <div class="icon2">
-                                            <div class="background2"></div>
-                                            <div class="iconheart"><img src="/src/assets/img/heart.png"></div>
-                                        </div>
-                                    </div>
-                                    <div class="information">
-                                        <div class="productName">
-                                            <span>Jodan 1</span>
-                                        </div>
-                                        <div class="price">
-                                            <span>Price: $ 120</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="product-hidden"></div>
                     <div class="button-product">
-                        <button class="button-item" id="loadMoreButton" @click="handleButtonClick()">Load More</button>
+                        <button class="button-item" id="loadMoreButton" @click="loadMoreProducts">Load More</button>
                     </div>
                 </div>
                 <div class="trending">
@@ -613,7 +373,7 @@ onMounted(() => {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>

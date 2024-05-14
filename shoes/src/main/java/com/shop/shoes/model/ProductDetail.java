@@ -34,7 +34,7 @@ public class ProductDetail {
 
     private String image;
 
-    private Double price;
+
 
     private int quantity;
 

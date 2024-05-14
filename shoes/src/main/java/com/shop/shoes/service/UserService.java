@@ -12,12 +12,11 @@ public interface UserService {
 
     UserDTO getById(Long id);
 
-    UserDTO create(UserDTO userDTO);
+    UserDTO create(UserDTO userDTO,String siteURL) throws UnsupportedEncodingException, MessagingException;
 
     UserDTO update(Long id,UserDTO userDTO) throws Exception;
 
     void deleteById(Long id);
 
-    void register(UserDTO user, String siteURL) throws UnsupportedEncodingException, MessagingException;
-    void sendVerificationEmail(UserDTO user, String siteURL) throws MessagingException, UnsupportedEncodingException;
+    void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException;
 }

@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(ProductDTO productDTO) {
+    public Product createProduct(ProductDTO productDTO,String fileName) {
 
         Product product = productUtils.mapProductDtotoProduct(productDTO);
         Optional<Category> category = categoryRepository.findById(product.getCategory().getId());
@@ -54,7 +54,9 @@ public class ProductServiceImpl implements ProductService {
             Product productSave = new Product();
             productSave.setCategory(category.get());
             productSave.setProductAddress(product.getProductAddress());
+            productSave.setPrice(product.getPrice());
             productSave.setDescription(product.getDescription());
+            productSave.setImage(fileName);
             productSave.setProductName(product.getProductName());
             productSave.setProductStatus(product.getProductStatus());
             Product savedProduct = productRepository.save(productSave);
@@ -65,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long id, ProductDTO productDTO) {
+    public Product updateProduct(Long id, ProductDTO productDTO,String fileName) {
 
         Product productOld = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sản phẩm này không tồn tại"));
@@ -75,13 +77,21 @@ public class ProductServiceImpl implements ProductService {
         }
         Category categoryByID = categoryRepository.findById(productDTO.getCategoryID())
                 .orElseThrow(() -> new RuntimeException("Danh mục của sản phẩm này không tồn tại"));
+        productOld.setPrice(productDTO.getPrice());
         productOld.setProductAddress(productDTO.getProductAddress());
         productOld.setDescription(productDTO.getDescription());
         productOld.setProductName(productDTO.getProductName());
         productOld.setProductStatus(productDTO.getProductStatus());
+        productOld.setImage(fileName);
         productOld.setCategory(categoryByID);
         Product savedProduct = productRepository.save(productOld);
         return savedProduct;
+    }
+
+    @Override
+    public List<Product> getFirst8Products() {
+        return productRepository.findTop8ByOrderByIdAsc().stream()
+                .collect(Collectors.toList());
     }
 
     @Override

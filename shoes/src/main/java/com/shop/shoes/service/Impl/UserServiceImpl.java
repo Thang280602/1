@@ -64,16 +64,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO create(UserDTO userDTO) {
+    public UserDTO create(UserDTO userDTO,String siteURL) throws UnsupportedEncodingException, MessagingException{
         if (userDTO.getId() != null && userRepository.existsById(userDTO.getId())) {
             throw new IllegalArgumentException("User này đã tồn tại");
         }
         List<Role> roles = Arrays.asList(roleRepository.findByRoleName(RoleEnum.USER).get());
         User user = userUtils.mapUserDtoToUser(userDTO);
         user.setAuthenticationCode(passwordEncoder.encode(userDTO.getAuthenticationCode()));
+        String randomCode = UUID.randomUUID().toString();
+        user.setVerificationCode(randomCode);
+        user.setEnabled(true);
         user.setRoles(roles);
         try {
+
             User savedUser = userRepository.save(user);
+            sendVerificationEmail(savedUser, siteURL);
             return userUtils.mapUserToUserDto(savedUser);
         } catch (DataIntegrityViolationException e) {
             throw new UserNotFoundException(UserConstant.USER_NOT_FOUND);
@@ -112,22 +117,11 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public void register(UserDTO user, String siteURL) throws UnsupportedEncodingException, MessagingException {
-        String encodedPassword = new BCryptPasswordEncoder().encode(user.getAuthenticationCode());
-        user.setAuthenticationCode(encodedPassword);
 
-        String randomCode = UUID.randomUUID().toString();
-        user.setVerificationCode(randomCode);
-        user.setEnabled(true);
-        User user1 = userUtils.mapUserDtoToUser(user);
-        userRepository.save(user1);
-        sendVerificationEmail(user, siteURL);
-    }
 
 
     @Override
-    public void sendVerificationEmail(UserDTO user, String siteURL) throws MessagingException, UnsupportedEncodingException {
+    public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
         String fromAddress = "thang.danghuu@vti.com.vn";
         String senderName = "Confirm when creating account";

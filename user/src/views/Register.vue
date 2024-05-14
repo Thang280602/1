@@ -4,6 +4,8 @@ import axios from 'axios';
 import { ref } from 'vue';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const username = ref('');
 const email = ref('');
 const password = ref('');
@@ -17,7 +19,7 @@ const form = {
 const isPasswordVisible = ref(false)
 async function register() {
     try {
-        debugger
+        
         const responsedata = {
             id: userId.value,
             firstName: firstname.value,

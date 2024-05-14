@@ -3,6 +3,7 @@ package com.shop.shoes.repository;
 import com.shop.shoes.model.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SizeRepository extends JpaRepository<Size,Long> {
+import java.util.List;
 
+public interface SizeRepository extends JpaRepository<Size,Long> {
 }

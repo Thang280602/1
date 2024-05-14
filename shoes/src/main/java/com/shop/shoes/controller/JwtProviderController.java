@@ -50,7 +50,8 @@ public class JwtProviderController {
                 new UsernamePasswordAuthenticationToken(authDTO.getUsername(), authDTO.getAuthenticationCode())
         );
         if (authentication.isAuthenticated()) {
-            TokenDTO tokenDTO = jwtService.generateToken(authDTO.getUsername());
+            String role = authentication.getAuthorities().iterator().next().getAuthority();
+            TokenDTO tokenDTO = jwtService.generateToken(authDTO.getUsername(),role);
             return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
         } else {
             throw new UsernameNotFoundException("invalid user request !");

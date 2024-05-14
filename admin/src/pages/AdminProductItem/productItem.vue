@@ -22,9 +22,6 @@
                         Quantity
                     </th>
                     <th>
-                        Price
-                    </th>
-                    <th>
                         Discount
                     </th>
                     <th>
@@ -52,9 +49,6 @@
                     </td>
                     <td class="text-center">
                         {{ product.quantity }}
-                    </td>
-                    <td class="text-center">
-                        {{ product.price }}
                     </td>
                     <td class="text-center">
                         {{ product.discount }}

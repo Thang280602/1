@@ -18,6 +18,10 @@ import java.util.Set;
 public class ProductDTO {
     private Long id;
 
+    private String image;
+    private  Double price;
+    private int quantity;
+
     private String productName;
 
     private String productAddress;
