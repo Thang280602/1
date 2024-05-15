@@ -241,7 +241,7 @@ onMounted(() => {
                         <div class="row">
 
                             <div class="col-md-3" v-for="product in products" :key="product.id">
-                                <a href='/detail/${product.id}' style="text-decoration: none;">
+                                <a :href="`/detail/${product.id}`" style="text-decoration: none;">
                                     <div class="product">
                                         <div class="imageProduct"><img :src="getImageUrl(product.image)" alt=""></div>
                                         <div class="icon-item">

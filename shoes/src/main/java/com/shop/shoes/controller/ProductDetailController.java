@@ -52,6 +52,15 @@ public class ProductDetailController {
         List<ProductDetail> productDetailDTO = productDetailService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
+    @Operation(summary = "Lấy danhh sách tất cả chi tiết sản phẩm theo sản phẩm",
+            description = "Trả về danh sách chi tiết sản phẩm theo sản phẩm")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trả về danh sách chi tiết sản phẩm theo sản phẩm")})
+    @GetMapping("/findProductDetailByProductId/{id}")
+    public ResponseEntity<List<ProductDetail>> getProductDetailByProductId(@PathVariable Long id) {
+        List<ProductDetail> productDetailDTO = productDetailService.findProductDetailByProductId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
+    }
 
     @Operation(summary = "Lấy sản phẩm theo id",
             description = "Trả về chi tiết sản phẩm")

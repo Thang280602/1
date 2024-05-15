@@ -10,6 +10,6 @@ public interface ProductDetailService {
     ProductDetail findById(Long id);
     ProductDetail createProductDetail(ProductDetailDTO productDetailDTO);
     ProductDetail updateProductDetail(Long id, ProductDetailDTO productDetailDTO);
-
+    List<ProductDetail> findProductDetailByProductId(Long id);
     void deleteByProductId(Long id);
 }

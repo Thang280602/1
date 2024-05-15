@@ -5,7 +5,7 @@
         <div class="section__product_left">
             <div class="section__product_left__top">
                 <div class="section__product__left__top__image">
-                    <img :src="images[curentImage]" alt="">
+                    <img :src="curentImage" alt="">
 
                 </div>
                 <div class="section__product_left__top__tags">
@@ -34,8 +34,8 @@
                 </div>
                 <div class="section__product__right__top__overview">
                     <div class="section__product__right__top__overview__left">
-                        <h3>Nike Blaze MID</h3>
-                        <span>Nike Store</span>
+                        <h3>{{ product?.productName }}</h3>
+                        <span>{{ product?.category?.categoryName }}</span>
                     </div>
                     <div class="section__product__right__top__overview__right">
                         <div class="section__product__right__top__overview__right__wishlist">
@@ -48,8 +48,8 @@
                 </div>
                 <div class="section__product__right__top__infos">
                     <div class="section__product__right__top__infos__price">
-                        <h3>$179.99</h3>
-                        <h2>$279.99</h2>
+                        <h3>179VND</h3>
+                        <h2>{{ product?.price }}VND</h2>
                     </div>
                     <div class="section__product__right__top__infos__review">
                         <div class="section__product__right__top__infos__review__item">
@@ -71,12 +71,11 @@
                 <div class="section__product__right__info__colors">
                     <h3>Choose a Color</h3>
                     <div class="section__product__right__info__colors--select">
-                        <button v-for="(color, index) in colors" :key="index"
+                        <button v-for="(color, index) in colors" :key="index" style="border-color: black;"
                             :style="{ backgroundColor: color.color, outline: selectedColor === color.color ? `3px solid ${color.color}` : 'none' }"
-                            @click="setColor(color.color, color.image)"> <img v-if="color.color === selectedColor"
-                                class="tick" src="../assets/img/tick.png" alt="">
+                            @click="setColor(color.color)">
+                            <img v-if="color.color === selectedColor" class="tick" src="../assets/img/tick.png" alt="">
                         </button>
-
                         <div value="selected">
                             <img src="../assets/images/Selected.png" alt="">
                         </div>
@@ -85,9 +84,9 @@
                 <div class="section__product__right__info__sỉzes">
                     <h3>Choose a Size</h3>
                     <div class="section__product__right__info__sizes--select">
-                        <v-radio-group v-model="ex7" inline>
+                        <v-radio-group v-model="selectedSize" inline @change="setSize">
                             <v-radio class="label" v-for="(item, index) in sizes" :key="index" color="info"
-                                :label="item.label" :value="item.value"></v-radio>
+                                :label="item.sizeName" :value="item.value"></v-radio>
                         </v-radio-group>
                     </div>
                 </div>
@@ -582,6 +581,9 @@
 import { ref, onMounted } from 'vue';
 import TheHeader from '../components/Header.vue';
 import TheFooter from '../components/Footer.vue';
+import { useRoute } from 'vue-router';
+import axios from 'axios';
+
 export default {
     name: 'Detail',
     components: {
@@ -589,32 +591,81 @@ export default {
         TheFooter,
     },
     setup() {
-        const curentImage = ref('anh5');
+        const route = useRoute();
+        const productId = ref(route.params.id);
+        const curentImage = ref('');
         const selectedColor = ref(null);
+        const selectedSize = ref(null);
         const ex7 = ref('red');
         const amount = ref(0);
         const images = ref({});
+        const product = ref(null);
+        const productDetail = ref(null);
+        const colors = ref([]);
+        const sizes = ref([]);
 
-        const colors = [
-            { color: 'rgba(223, 56, 50, 1)', image: 'anh2' },
-            { color: 'rgba(60, 173, 212, 1)', image: 'anh3' },
-            { color: 'rgba(24, 24, 26, 1)', image: 'anh5' },
-            { color: 'rgba(238, 238, 238, 1)', image: 'anh4' },
-            { color: 'rgba(116, 99, 82, 1)', image: 'anh5' }
-        ];
+        const colorMapping = {
+            'Red': 'rgba(223, 56, 50, 1)',
+            'Blue': 'rgba(60, 173, 212, 1)',
+            'Black': 'rgba(24, 24, 26, 1)',
+            'White': 'rgba(238, 238, 238, 1)',
+            'Dark': 'rgba(116, 99, 82, 1)'
+        };
+        const fetchColors = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/color');
+                const colorData = response.data;
+                console.log('reponse', response.data);
+                const colorsArray = colorData.map(color => {
+                    // Lấy tên màu từ trường colorName của mỗi đối tượng
+                    const colorName = color.colorName;
+                    // Kiểm tra xem tên màu có trong colorMapping hay không
+                    if (colorName in colorMapping) {
+                        console.log(colorMapping[colorName]);
 
-        const sizes = ref([
-            { label: '36-Female', value: '36-Female' },
-            { label: '37-Female', value: '37-Female' },
-            { label: '38-Female', value: '38-Female' },
-            { label: '39-Female', value: '39-Female' },
-            { label: '40-Female', value: '40-Female' },
-            { label: '40-Male', value: '40-Male' },
-            { label: '41-Male', value: '41-Male' },
-            { label: '42-Male', value: '42-Male' },
-            { label: '43-Male', value: '43-Male' },
-            { label: '44-Male', value: '44-Male' }
-        ]);
+                        // Nếu có, sử dụng giá trị từ colorMapping
+                        return {
+                            color: colorMapping[colorName],
+                            name: colorName,
+                            id: color.id,
+                            status: color.status
+                        };
+                    } else {
+                        // Nếu không, có thể trả về giá trị mặc định hoặc không trả về gì cả tùy thuộc vào yêu cầu của bạn
+                        return {
+                            color: 'rgba(0, 0, 0, 0)',
+                            name: colorName,
+                            id: color.id,
+                            status: color.status
+                        };
+                    }
+                });
+
+                colors.value = colorsArray;
+            } catch (error) {
+                console.error('Error fetching colors:', error);
+            }
+        };
+        const setColor = (color) => {
+            selectedColor.value = color;
+        };
+        const setSize = (size) => {
+            selectedSize.value = size;
+        };
+        onMounted(() => {
+            fetchColors();
+        });
+        const fetchSizes = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/size');
+                sizes.value = response.data;
+            } catch (error) {
+                console.error('Error fetching sizes:', error);
+            }
+        };
+
+        onMounted(fetchSizes);
+
         const features = ref([
             { isVisible: true, image: "../assets/img/anh5.png", name: "Jordan", price: 500, rating: 1 },
             { isVisible: false, image: "../assets/img/anh2.png", name: "Nike", price: 400, rating: 3.5 },
@@ -625,33 +676,7 @@ export default {
             { isVisible: false, image: "../assets/img/anh3.png", name: "Nike", price: 400, rating: 2.5 },
             { isVisible: true, image: "../assets/img/anh4.png", name: "Jordan", price: 500, rating: 4.5 },
             { isVisible: false, image: "../assets/img/anh4.png", name: "Nike", price: 400, rating: 10 },
-            // Bổ sung các feature khác ở đây
         ]);
-        onMounted(() => {
-            let items = document.querySelectorAll('.carousel .carousel-item')
-
-            items.forEach((el) => {
-                const minPerSlide = 6
-                let next = el.nextElementSibling
-                for (var i = 1; i < minPerSlide; i++) {
-                    if (!next) {
-                        // wrap carousel by using first child
-                        next = items[0]
-                    }
-                    let cloneChild = next.cloneNode(true)
-                    el.appendChild(cloneChild.children[0])
-                    next = next.nextElementSibling
-                }
-            })
-        });
-        const setColor = (color, imageUrl) => {
-            selectedColor.value = color;
-            curentImage.value = imageUrl;
-        };
-
-        const setAmount = (step) => {
-            amount.value += step;
-        };
 
         const fetchImages = async () => {
             const imagesContext = import.meta.glob('../assets/img/*.png');
@@ -661,17 +686,65 @@ export default {
             imageKeys.forEach((key, index) => {
                 images.value[key.replace(/^.*[\\/]/, '').split('.')[0]] = imageFiles[index].default;
             });
-
         };
 
-        onMounted(() => {
 
+        const setAmount = (step) => {
+            amount.value += step;
+        };
+
+        const getProductById = async () => {
+            try {
+
+                const response = await axios.get(`http://localhost:8080/product/get/${productId.value}`);
+                product.value = response.data;
+                curentImage.value = `http://localhost:8080/uploads/${product.value.image}`;
+                console.log(curentImage.value);
+                console.log(response);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        const getProductDetailByProductId = async () => {
+            try {
+
+                const response = await axios.get(` http://localhost:8080/productDetail/findProductDetailByProductId/${productId.value}`);
+                productDetail.value = response.data;
+                console.log(curentImage.value);
+                console.log(response);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        onMounted(getProductDetailByProductId);
+        onMounted(getProductById);
+        onMounted(() => {
             fetchImages();
+
+
+            let items = document.querySelectorAll('.carousel .carousel-item');
+            items.forEach((el) => {
+                const minPerSlide = 6;
+                let next = el.nextElementSibling;
+                for (let i = 1; i < minPerSlide; i++) {
+                    if (!next) {
+                        next = items[0];
+                    }
+                    let cloneChild = next.cloneNode(true);
+                    el.appendChild(cloneChild.children[0]);
+                    next = next.nextElementSibling;
+                }
+            });
         });
 
         return {
+            productDetail,
+            product,
             curentImage,
             selectedColor,
+            selectedSize,
+            setSize,
             ex7,
             amount,
             colors,
@@ -684,7 +757,6 @@ export default {
     }
 };
 </script>
-
 
 
 <style scoped>
@@ -895,7 +967,6 @@ a {
     gap: 41px;
 }
 
-.section__product__right__top__infos__price {}
 
 .section__product__right__top__infos__price h3 {
     font-family: Mulish;
@@ -1233,11 +1304,13 @@ ul li {
     position: relative;
 
 }
+
 @media (max-width: 767px) {
-    .carousel-inner .carousel-item > div {
+    .carousel-inner .carousel-item>div {
         display: none;
     }
-    .carousel-inner .carousel-item > div:first-child {
+
+    .carousel-inner .carousel-item>div:first-child {
         display: block;
     }
 }
@@ -1250,30 +1323,34 @@ ul li {
 
 /* medium and up screens */
 @media (min-width: 768px) {
-    
+
     .carousel-inner .carousel-item-end.active,
     .carousel-inner .carousel-item-next {
-      transform: translateX(25%);
+        transform: translateX(25%);
     }
-    
-    .carousel-inner .carousel-item-start.active, 
+
+    .carousel-inner .carousel-item-start.active,
     .carousel-inner .carousel-item-prev {
-      transform: translateX(-25%);
+        transform: translateX(-25%);
     }
 }
 
 .carousel-inner .carousel-item-end,
-.carousel-inner .carousel-item-start { 
-  transform: translateX(0);
+.carousel-inner .carousel-item-start {
+    transform: translateX(0);
 }
-.carousel-control-next, .carousel-control-prev {
-    top:160% !important;
+
+.carousel-control-next,
+.carousel-control-prev {
+    top: 160% !important;
 
 }
-.lefticon{
-    margin-top: 40% ;
+
+.lefticon {
+    margin-top: 40%;
 }
-.righticon{
-    margin-top: 40% ;
+
+.righticon {
+    margin-top: 40%;
 }
 </style>

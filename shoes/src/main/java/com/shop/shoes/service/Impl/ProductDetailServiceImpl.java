@@ -68,6 +68,10 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         }
     }
 
+    @Override
+    public List<ProductDetail> findProductDetailByProductId(Long id) {
+        return productDetailRepository.findProductDetailByProductId(id).stream().collect(Collectors.toList());
+    }
 
 
     @Override
