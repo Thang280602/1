@@ -36,7 +36,6 @@ public class JwtProviderController {
     @Autowired
     private JwtService jwtService;
 
-
     @Operation(summary = "Phương thức để như tính năng login xác thực người dùng",
             description = "Trả về token nếu thành công")
     @ApiResponses(value = {
@@ -51,6 +50,7 @@ public class JwtProviderController {
         );
         if (authentication.isAuthenticated()) {
             String role = authentication.getAuthorities().iterator().next().getAuthority();
+//            Long userId = userService.getUserIdByUsername(userDetails.getUsername());
             TokenDTO tokenDTO = jwtService.generateToken(authDTO.getUsername(),role);
             return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
         } else {

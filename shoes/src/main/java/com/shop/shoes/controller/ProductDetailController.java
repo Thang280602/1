@@ -71,7 +71,15 @@ public class ProductDetailController {
         ProductDetail productDetailDTO = productDetailService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
-
+    @Operation(summary = "Lấy sản phẩm theo color name và size name",
+            description = "Trả về chi tiết sản phẩm")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trả về danh sách chi tiết sản phẩm")})
+    @GetMapping("/findByColorNameAndSizeName")
+    public ResponseEntity<ProductDetail> findByColorNameAndSizeName(@RequestParam("productId") Long id , @RequestParam("colorName") String colorName, @RequestParam("sizeName") String sizeName) {
+        ProductDetail productDetailDTO = productDetailService.findProductDetailByColorNameAndSizeName(id,colorName, sizeName);
+        return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
+    }
     @Operation(summary = "Thêm  sản phẩm chi tiết",
             description = "Trả về sản phẩm chi tiết và thông tin message trạng thái")
     @ApiResponses(value = {

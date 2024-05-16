@@ -42,8 +42,11 @@ public class User {
 
     private String email;
 
+    @Column(unique = true)
     private String username;
+
     private Boolean enabled;
+
     private String verificationCode;
 
     private String authenticationCode;

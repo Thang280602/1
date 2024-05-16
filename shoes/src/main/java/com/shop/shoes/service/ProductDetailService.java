@@ -11,5 +11,7 @@ public interface ProductDetailService {
     ProductDetail createProductDetail(ProductDetailDTO productDetailDTO);
     ProductDetail updateProductDetail(Long id, ProductDetailDTO productDetailDTO);
     List<ProductDetail> findProductDetailByProductId(Long id);
+    ProductDetail findProductDetailByColorNameAndSizeName(Long id, String colorName, String sizeName);
+
     void deleteByProductId(Long id);
 }

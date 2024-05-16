@@ -65,9 +65,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO create(UserDTO userDTO,String siteURL) throws UnsupportedEncodingException, MessagingException{
-        if (userDTO.getId() != null && userRepository.existsById(userDTO.getId())) {
+        if (userDTO.getId() != null && userRepository.existsById(userDTO.getId())  ) {
             throw new IllegalArgumentException("User này đã tồn tại");
         }
+
         List<Role> roles = Arrays.asList(roleRepository.findByRoleName(RoleEnum.USER).get());
         User user = userUtils.mapUserDtoToUser(userDTO);
         user.setAuthenticationCode(passwordEncoder.encode(userDTO.getAuthenticationCode()));

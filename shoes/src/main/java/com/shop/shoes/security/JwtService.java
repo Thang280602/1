@@ -37,6 +37,7 @@ public class JwtService {
     public TokenDTO generateToken(String userName,String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
+//        claims.put("userId",id);
         TokenDTO tokenDTO=TokenDTO.builder().token(createToken(claims, userName)).build();
         return tokenDTO;
     }

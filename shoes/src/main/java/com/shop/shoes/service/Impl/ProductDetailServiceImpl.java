@@ -73,6 +73,11 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         return productDetailRepository.findProductDetailByProductId(id).stream().collect(Collectors.toList());
     }
 
+    @Override
+    public ProductDetail findProductDetailByColorNameAndSizeName(Long id, String colorName, String sizeName) {
+            return productDetailRepository.findProductDetailByColorNameAndSizeName(id,colorName,sizeName);
+    }
+
 
     @Override
     public void deleteByProductId(Long id) {

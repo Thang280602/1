@@ -48,7 +48,7 @@
                 </div>
                 <div class="section__product__right__top__infos">
                     <div class="section__product__right__top__infos__price">
-                        <h3>179VND</h3>
+                        <h3>{{ totalPriceAfterDiscount }}</h3>
                         <h2>{{ product?.price }}VND</h2>
                     </div>
                     <div class="section__product__right__top__infos__review">
@@ -72,22 +72,23 @@
                     <h3>Choose a Color</h3>
                     <div class="section__product__right__info__colors--select">
                         <button v-for="(color, index) in colors" :key="index" style="border-color: black;"
-                            :style="{ backgroundColor: color.color, outline: selectedColor === color.color ? `3px solid ${color.color}` : 'none' }"
-                            @click="setColor(color.color)">
-                            <img v-if="color.color === selectedColor" class="tick" src="../assets/img/tick.png" alt="">
+                            :style="{ backgroundColor: color.color, outline: selectedColor === color.name ? `3px solid ${color.color}` : 'none' }"
+                            @click="setColor(color.name)">
+                            <img v-if="color.name === selectedColor" class="tick" src="../assets/img/tick.png" alt="">
                         </button>
                         <div value="selected">
                             <img src="../assets/images/Selected.png" alt="">
                         </div>
                     </div>
                 </div>
-                <div class="section__product__right__info__sỉzes">
+                <div class="section__product__right__info__sizes">
                     <h3>Choose a Size</h3>
                     <div class="section__product__right__info__sizes--select">
-                        <v-radio-group v-model="selectedSize" inline @change="setSize">
+                        <v-radio-group v-model="selectedSize" inline @change="setSize(selectedSize)">
                             <v-radio class="label" v-for="(item, index) in sizes" :key="index" color="info"
-                                :label="item.sizeName" :value="item.value"></v-radio>
+                                :label="item.sizeName" :value="item"></v-radio>
                         </v-radio-group>
+
                     </div>
                 </div>
                 <div class="add">
@@ -96,7 +97,7 @@
                         <span id="amount">{{ amount }}</span>
                         <span @click="this.setAmount(+1)">+</span>
                     </div>
-                    <button>
+                    <button type="submit" @click="addToCart">
                         <img src="../assets/img/CartWhile.png" alt="">
                         Add To Cart
                     </button>
@@ -122,467 +123,16 @@
         </div>
 
     </div>
-    <div class="section__body">
-        <div class="tile">
-            <h3 class="selected">Description</h3>
-            <h3>Review</h3>
-        </div>
-        <div class="content">
-            <div class="content__description">
-                <h2>Product Description</h2>
-                <div>
-                    <p>Praised by many for its enduring look and feel, the wardrobe staple hits refresh with the Nike
-                        Blazer Mid '77 Jumbo.Harnessing the old-school look you love, it now has an elastic heel with
-                        corduroy-like texture and large pull tabs for easy on and off.The oversized Swoosh design and
-                        jumbo laces add a fun twist</p>
-                </div>
-            </div>
-            <div class="content__list">
-                <h2>Benefits</h2>
-                <ul>
-                    <li><img src="../assets/img/checkicon.png" alt=""> Thick, exposed foam tongue</li>
-                    <li><img src="../assets/img/checkicon.png" alt="">Jumbo laces</li>
-                    <li><img src="../assets/img/checkicon.png" alt="">Thick thread stitching</li>
-                    <li><img src="../assets/img/checkicon.png" alt="">Large pull tabs on heel and tongue</li>
-                    <li><img src="../assets/img/checkicon.png" alt="">Oversized woven label</li>
-                </ul>
-            </div>
-
-            <div class="content__list">
-                <h2>Product Details</h2>
-                <ul>
-                    <li><img src="../assets/img/checkicon.png" alt="">A raised herringbone pattern on the rubber outsole
-                        exaggerates the classic look.</li>
-                    <li><img src="../assets/img/checkicon.png" alt="">Big and Bold: The oversized Swoosh design and
-                        jumbo laces add a bold look to any outfit.
-                    </li>
-                </ul>
-
-            </div>
-
-            <div class="content__list">
-                <h2>More Details</h2>
-                <ul>
-                    <li><img src="../assets/img/checkicon.png" alt="">Big and Bold: The oversized Swoosh design and
-                        jumbo laces add a bold look to any outfit.
-                    </li>
-                    <li><img src="../assets/img/checkicon.png" alt="">Colour Shown: Mutiple-Color</li>
-                    <li><img src="../assets/img/checkicon.png" alt="">Country/Region of Origin: Vietnam</li>
-                </ul>
-
-            </div>
-        </div>
-
-    </div>
-
-    <div class="last">
-        <div class="container">
-            <div class="textlast">
-                Similar Items You Might Also Like
-            </div>
-            <div class="row mx-auto my-auto justify-content-center">
-                <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 1</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 2</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 3</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 4</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 5</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 6</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 7</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="col-md-2">
-                                <div class="SP">
-                                    <div class="imgIconSP">
-                                        <div class="imgSP">
-                                            <img src="../assets/img/sp.png" alt="">
-                                        </div>
-                                        <div class="iconsp">
-                                            <div class="iconheartsp">
-                                                <img src="../assets/img/heart.png" alt="">
-                                            </div>
-                                            <div class="iconcartsp">
-                                                <img src="../assets/img/iconcart.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="informationsp">
-                                        <div class="namesp">
-                                            <span>Adidas Balance 8</span>
-                                        </div>
-                                        <div class="pricesp">
-                                            <span>$ 200.00</span>
-                                        </div>
-                                        <div class="discripsp">
-                                            <span>5 types of shoos available</span>
-                                        </div>
-                                        <div class="starsp">
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="onestar">
-                                                <img src="../assets/img/onestar.png" alt="">
-                                            </div>
-                                            <div class="halfstar">
-                                                <img src="../assets/img/halfstar.png" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <a class="carousel-control-prev bg-transparent w-aut lefticon" href="#recipeCarousel" role="button"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon iconnext" aria-hidden="true"></span>
-                </a>
-                <a class="carousel-control-next bg-transparent w-aut righticon" href="#recipeCarousel" role="button"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon iconnext " aria-hidden="true"></span>
-                </a>
-            </div>
-        </div>
-
-    </div>
-
     <TheFooter></TheFooter>
 </template>
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, onUpdated } from 'vue';
 import TheHeader from '../components/Header.vue';
 import TheFooter from '../components/Footer.vue';
-import { useRoute } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss';
 
 export default {
     name: 'Detail',
@@ -591,18 +141,22 @@ export default {
         TheFooter,
     },
     setup() {
+        const router = useRouter();
         const route = useRoute();
         const productId = ref(route.params.id);
         const curentImage = ref('');
         const selectedColor = ref(null);
         const selectedSize = ref(null);
+        const sizes = ref([]);
         const ex7 = ref('red');
-        const amount = ref(0);
+        const amount = ref(1);
         const images = ref({});
         const product = ref(null);
         const productDetail = ref(null);
+        const productDetailByColorNameAndSizeName = ref(null);
         const colors = ref([]);
-        const sizes = ref([]);
+        const totalPriceAfterDiscount = ref(0);
+
 
         const colorMapping = {
             'Red': 'rgba(223, 56, 50, 1)',
@@ -615,15 +169,9 @@ export default {
             try {
                 const response = await axios.get('http://localhost:8080/color');
                 const colorData = response.data;
-                console.log('reponse', response.data);
                 const colorsArray = colorData.map(color => {
-                    // Lấy tên màu từ trường colorName của mỗi đối tượng
                     const colorName = color.colorName;
-                    // Kiểm tra xem tên màu có trong colorMapping hay không
                     if (colorName in colorMapping) {
-                        console.log(colorMapping[colorName]);
-
-                        // Nếu có, sử dụng giá trị từ colorMapping
                         return {
                             color: colorMapping[colorName],
                             name: colorName,
@@ -631,7 +179,6 @@ export default {
                             status: color.status
                         };
                     } else {
-                        // Nếu không, có thể trả về giá trị mặc định hoặc không trả về gì cả tùy thuộc vào yêu cầu của bạn
                         return {
                             color: 'rgba(0, 0, 0, 0)',
                             name: colorName,
@@ -646,12 +193,24 @@ export default {
                 console.error('Error fetching colors:', error);
             }
         };
-        const setColor = (color) => {
-            selectedColor.value = color;
+        const decreaseAmount = () => {
+            if (amount.value > 1) {
+                amount.value--;
+            }
         };
-        const setSize = (size) => {
+
+        const increaseAmount = () => {
+            amount.value++;
+        };
+        const setSize = async (size) => {
             selectedSize.value = size;
+            // await callBackend();
         };
+        const setColor = async (color) => {
+            selectedColor.value = color;
+            // await callBackend();
+        };
+
         onMounted(() => {
             fetchColors();
         });
@@ -692,15 +251,12 @@ export default {
         const setAmount = (step) => {
             amount.value += step;
         };
-
         const getProductById = async () => {
             try {
 
                 const response = await axios.get(`http://localhost:8080/product/get/${productId.value}`);
                 product.value = response.data;
                 curentImage.value = `http://localhost:8080/uploads/${product.value.image}`;
-                console.log(curentImage.value);
-                console.log(response);
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -710,13 +266,92 @@ export default {
 
                 const response = await axios.get(` http://localhost:8080/productDetail/findProductDetailByProductId/${productId.value}`);
                 productDetail.value = response.data;
-                console.log(curentImage.value);
-                console.log(response);
             } catch (error) {
                 console.error('Error:', error);
             }
         };
+        const callBackend = async () => {
+            try {
+                if (selectedColor.value && selectedSize.value) {
+                    const response = await axios.get('http://localhost:8080/productDetail/findByColorNameAndSizeName', {
+                        params: {
+                            productId: productId.value,
+                            colorName: selectedColor.value,
+                            sizeName: selectedSize.value.sizeName
+                        }
+                    });
+                    if (response.data) {
+                        productDetailByColorNameAndSizeName.value = response.data;
+                    } else {
+                        // Hiển thị cửa sổ SweetAlert2 nếu không có dữ liệu trả về từ API
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Thông báo',
+                            text: 'Mong quý khách thông cảm! Sản phẩm này hiện tại đang hết hàng, mời quý khách lựa chọn sản phẩm khác!',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Reset selectedColor và selectedSize về null
+                                selectedColor.value = null;
+                                selectedSize.value = null;
+                            }
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while fetching data from the API!',
+                    confirmButtonText: 'OK'
+                });
+            }
+        };
+        const calculateTotal = () => {
 
+            if (product.value) {
+                const price = product.value.price;
+
+                const discount = productDetailByColorNameAndSizeName.value?.discount ? productDetailByColorNameAndSizeName.value?.discount : 0;
+                totalPriceAfterDiscount.value = price * (1 - discount / 100);
+            }
+
+        };
+        const isLoggedIn = () => {
+           
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+            console.log('token',token);
+            console.log('useId',userId);
+            return !!token;
+        };
+
+        // Thêm sản phẩm vào giỏ hàng
+        const addToCart = async () => {
+            if (!isLoggedIn()) {
+               
+                router.push('/login');
+                return;
+            }
+            try {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: 'Sản phẩm đã được thêm vào giỏ hàng!',
+                    confirmButtonText: 'OK'
+                });
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!',
+                    confirmButtonText: 'OK'
+                });
+            }
+        };
+        onMounted(callBackend);
         onMounted(getProductDetailByProductId);
         onMounted(getProductById);
         onMounted(() => {
@@ -737,19 +372,29 @@ export default {
                 }
             });
         });
-
+        // watch(selectedColor, selectedSize, () => {
+        //     calculateTotal();
+        //     console.log("aaaa");
+        // })
+        onUpdated(async () => {
+            await callBackend()
+            calculateTotal();
+        })
         return {
+            addToCart,
+            totalPriceAfterDiscount,
             productDetail,
             product,
             curentImage,
             selectedColor,
             selectedSize,
-            setSize,
+            productDetailByColorNameAndSizeName,
             ex7,
             amount,
             colors,
             sizes,
             images,
+            setSize,
             setColor,
             setAmount,
             features
