@@ -50,7 +50,6 @@ public class JwtProviderController {
         );
         if (authentication.isAuthenticated()) {
             String role = authentication.getAuthorities().iterator().next().getAuthority();
-//            Long userId = userService.getUserIdByUsername(userDetails.getUsername());
             TokenDTO tokenDTO = jwtService.generateToken(authDTO.getUsername(),role);
             return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
         } else {

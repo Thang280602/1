@@ -129,10 +129,11 @@
 import { ref, onMounted, watch, onUpdated } from 'vue';
 import TheHeader from '../components/Header.vue';
 import TheFooter from '../components/Footer.vue';
-import { useRouter,useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
+import { param } from 'jquery';
 
 export default {
     name: 'Detail',
@@ -156,7 +157,8 @@ export default {
         const productDetailByColorNameAndSizeName = ref(null);
         const colors = ref([]);
         const totalPriceAfterDiscount = ref(0);
-
+        const userName = ref('');
+        // const userName = ref('');
 
         const colorMapping = {
             'Red': 'rgba(223, 56, 50, 1)',
@@ -193,15 +195,7 @@ export default {
                 console.error('Error fetching colors:', error);
             }
         };
-        const decreaseAmount = () => {
-            if (amount.value > 1) {
-                amount.value--;
-            }
-        };
 
-        const increaseAmount = () => {
-            amount.value++;
-        };
         const setSize = async (size) => {
             selectedSize.value = size;
             // await callBackend();
@@ -209,6 +203,11 @@ export default {
         const setColor = async (color) => {
             selectedColor.value = color;
             // await callBackend();
+        };
+        const setAmount = (value) => {
+            if (amount.value + value >= 0) { // Đảm bảo số lượng không âm
+                amount.value += value;
+            }
         };
 
         onMounted(() => {
@@ -248,9 +247,7 @@ export default {
         };
 
 
-        const setAmount = (step) => {
-            amount.value += step;
-        };
+
         const getProductById = async () => {
             try {
 
@@ -280,6 +277,7 @@ export default {
                             sizeName: selectedSize.value.sizeName
                         }
                     });
+                    console.log(typeof (productId.value));
                     if (response.data) {
                         productDetailByColorNameAndSizeName.value = response.data;
                     } else {
@@ -318,29 +316,54 @@ export default {
             }
 
         };
-        const isLoggedIn = () => {
-           
-            const token = localStorage.getItem('token');
-            const userId = localStorage.getItem('userId');
-            console.log('token',token);
-            console.log('useId',userId);
-            return !!token;
+
+        const decodeToken = (token) => {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
         };
 
+        const isLoggedIn = () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return false;
+            }
+            const decodedToken = decodeToken(token);
+            userName.value = decodedToken.sub;
+            return !!token;
+        };
         // Thêm sản phẩm vào giỏ hàng
         const addToCart = async () => {
             if (!isLoggedIn()) {
-               
+
                 router.push('/login');
                 return;
             }
             try {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Thành công',
-                    text: 'Sản phẩm đã được thêm vào giỏ hàng!',
-                    confirmButtonText: 'OK'
+                
+                const response = await axios.post('http://localhost:8080/cart/add', null, {
+                    params: {
+                        productId: productId.value,
+                        colorName: selectedColor.value,
+                        sizeName: selectedSize.value.sizeName,
+                        userName: userName.value,
+                        amout: amount.value
+                    }
                 });
+                if (response.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Sản phẩm đã được thêm vào giỏ hàng!',
+                        confirmButtonText: 'OK'
+                    });
+                    router.push('/cart')
+                } else {
+                    throw new Error('Failed to add product to cart');
+                }
             } catch (error) {
                 console.error('Error adding to cart:', error);
                 Swal.fire({

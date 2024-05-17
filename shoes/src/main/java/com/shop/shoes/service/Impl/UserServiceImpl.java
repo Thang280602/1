@@ -65,10 +65,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO create(UserDTO userDTO,String siteURL) throws UnsupportedEncodingException, MessagingException{
-        if (userDTO.getId() != null && userRepository.existsById(userDTO.getId())  ) {
+        if (userDTO.getId()!= null && userRepository.existsById(userDTO.getId())
+         ) {
             throw new IllegalArgumentException("User này đã tồn tại");
         }
-
+        if ( userRepository.existsByUsername(userDTO.getUsername())
+        ) {
+            throw new IllegalArgumentException("UserName này đã tồn tại");
+        }
         List<Role> roles = Arrays.asList(roleRepository.findByRoleName(RoleEnum.USER).get());
         User user = userUtils.mapUserDtoToUser(userDTO);
         user.setAuthenticationCode(passwordEncoder.encode(userDTO.getAuthenticationCode()));
@@ -118,8 +122,12 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-
-
+    @Override
+    public UserDTO findByUserName(String userName) {
+        return userRepository.findByUsername(userName).map(user -> userUtils.mapUserToUserDto(user)).orElseThrow(
+                () -> new UserNotFoundException(UserConstant.USER_NOT_FOUND)
+        );
+    }
 
     @Override
     public void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException {

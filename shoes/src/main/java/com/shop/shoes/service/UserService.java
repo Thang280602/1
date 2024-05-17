@@ -17,6 +17,6 @@ public interface UserService {
     UserDTO update(Long id,UserDTO userDTO) throws Exception;
 
     void deleteById(Long id);
-
+    UserDTO findByUserName(String userName);
     void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException;
 }

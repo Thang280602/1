@@ -67,8 +67,6 @@ export default {
             } else {
                 this.isLoggedIn = false;
             }
-            console.log('isLoggedIn:', this.isLoggedIn); 
-            console.log('userName:', this.userName);
         },
         getTokenFromLocalStorage() {
             return localStorage.getItem('token'); 

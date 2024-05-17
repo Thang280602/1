@@ -1,7 +1,92 @@
 <script setup>
 import Header from '../components/Header.vue';
 import Footer from '@/components/Footer.vue';
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss';
+import axios from 'axios';
+
+const userName = ref('');
+const cartItems = ref([]);
+
+const decodeToken = (token) => {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+};
+const calculateTotal = (price, discount) => {
+    return price * (1 - discount / 100);
+
+};
+const isLoggedIn = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        return false;
+    }
+    const decodedToken = decodeToken(token);
+    userName.value = decodedToken.sub;
+    console.log(userName.value);
+    return !!token;
+};
+const getCart = async () => {
+    if (!isLoggedIn()) {
+
+        router.push('/login');
+        return;
+    }
+    try {
+
+        const response = await axios.get('http://localhost:8080/cart', {
+            params: {
+                userName: userName.value
+            }
+        });
+        cartItems.value = response.data;
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Đã xảy ra lỗi khi hiển thị giỏ hàng !',
+            confirmButtonText: 'OK'
+        });
+    }
+};
+const deleteProduct = async (id, index) => {
+    try {
+
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            const response = await axios.delete(`http://localhost:8080/cart/delete/${id}`);
+            console.log('CartItem deleted:', response.data);
+            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            cartItems.value.splice(index, 1);
+
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire("Cancelled", "Your imaginary file is safe :)", "error");
+        }
+    } catch (error) {
+        console.error('Error deleting product:', error);
+    }
+}
+
+const getImageUrl = (relativePath) => {
+    return `http://localhost:8080/uploads/${relativePath}`;
+};
+onMounted(getCart);
 onMounted(() => {
     let items = document.querySelectorAll('.carousel .carousel-item')
 
@@ -35,186 +120,48 @@ onMounted(() => {
             </div>
             <div class="chia">
                 <div class="listcart">
-                    <div class="cartItem">
+                    <div class="cartItem" v-for="(cartItem , index) in cartItems" :key="cartItem.id">
                         <div class="imgcart">
                             <div class="heartcart">
                                 <img src="../assets/img/heart.png" alt="">
                             </div>
                             <div class="imganh">
-                                <img src="../assets/img/product1.png" alt="">
+                                <img :src="getImageUrl(cartItem.productDetail.image)" alt="" style="height: 100%;">
                             </div>
                         </div>
-                        <div class="cartaction">
+                        <div class="cartaction" style="margin-left: -20px;">
                             <div class="productname">
                                 <div class="tenproduct">
                                     <span class="textname">
-                                        Blaze Mid 77 - White/Blue
+                                        {{ cartItem.productDetail.product.productName }}
                                     </span><br>
                                     <span class="textdescripstion">
-                                        Custom made size 39 womens
+                                        Size: {{ cartItem.productDetail.size.sizeName }}
                                     </span>
                                 </div>
                                 <div class="deletecart">
-                                    <a href=""><img src="../assets/img/deletecart.png" alt=""></a>
+                                    <button @click="deleteProduct(cartItem.id, index)"><img src="../assets/img/deletecart.png"
+                                            alt=""></button>
                                 </div>
                             </div>
                             <div class="action">
                                 <div class="priceproduct">
                                     <span class="textprice">
-                                        $ 200
+                                        Price: {{
+                                            calculateTotal(cartItem.productDetail.product.price,cartItem.productDetail.discount)
+                                        }}
                                     </span>
                                 </div>
                                 <div class="addcart">
-                                    <input type="text" placeholder="1">
+                                    <input type="text" placeholder="1"
+                                        style="border: 2px solid black; border-radius: 8px;"
+                                        v-model="cartItem.quantity">
                                     <a href=""><img src="../assets/img/iconcart.png"></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="cartItem">
-                        <div class="imgcart">
-                            <div class="heartcart">
-                                <img src="../assets/img/heart.png" alt="">
-                            </div>
-                            <div class="imganh">
-                                <img src="../assets/img/product1.png" alt="">
-                            </div>
-                        </div>
-                        <div class="cartaction">
-                            <div class="productname">
-                                <div class="tenproduct">
-                                    <span class="textname">
-                                        Blaze Mid 77 - White/Blue
-                                    </span><br>
-                                    <span class="textdescripstion">
-                                        Custom made size 39 womens
-                                    </span>
-                                </div>
-                                <div class="deletecart">
-                                    <a href=""><img src="../assets/img/deletecart.png" alt=""></a>
-                                </div>
-                            </div>
-                            <div class="action">
-                                <div class="priceproduct">
-                                    <span class="textprice">
-                                        $ 200
-                                    </span>
-                                </div>
-                                <div class="addcart">
-                                    <input type="text" placeholder="1">
-                                    <a href=""><img src="../assets/img/iconcart.png"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cartItem">
-                        <div class="imgcart">
-                            <div class="heartcart">
-                                <img src="../assets/img/heart.png" alt="">
-                            </div>
-                            <div class="imganh">
-                                <img src="../assets/img/product1.png" alt="">
-                            </div>
-                        </div>
-                        <div class="cartaction">
-                            <div class="productname">
-                                <div class="tenproduct">
-                                    <span class="textname">
-                                        Blaze Mid 77 - White/Blue
-                                    </span><br>
-                                    <span class="textdescripstion">
-                                        Custom made size 39 womens
-                                    </span>
-                                </div>
-                                <div class="deletecart">
-                                    <a href=""><img src="../assets/img/deletecart.png" alt=""></a>
-                                </div>
-                            </div>
-                            <div class="action">
-                                <div class="priceproduct">
-                                    <span class="textprice">
-                                        $ 200
-                                    </span>
-                                </div>
-                                <div class="addcart">
-                                    <input type="text" placeholder="1">
-                                    <a href=""><img src="../assets/img/iconcart.png"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cartItem">
-                        <div class="imgcart">
-                            <div class="heartcart">
-                                <img src="../assets/img/heart.png" alt="">
-                            </div>
-                            <div class="imganh">
-                                <img src="../assets/img/product1.png" alt="">
-                            </div>
-                        </div>
-                        <div class="cartaction">
-                            <div class="productname">
-                                <div class="tenproduct">
-                                    <span class="textname">
-                                        Blaze Mid 77 - White/Blue
-                                    </span><br>
-                                    <span class="textdescripstion">
-                                        Custom made size 39 womens
-                                    </span>
-                                </div>
-                                <div class="deletecart">
-                                    <a href=""><img src="../assets/img/deletecart.png" alt=""></a>
-                                </div>
-                            </div>
-                            <div class="action">
-                                <div class="priceproduct">
-                                    <span class="textprice">
-                                        $ 200
-                                    </span>
-                                </div>
-                                <div class="addcart">
-                                    <input type="text" placeholder="1">
-                                    <a href=""><img src="../assets/img/iconcart.png"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cartItem">
-                        <div class="imgcart">
-                            <div class="heartcart">
-                                <img src="../assets/img/heart.png" alt="">
-                            </div>
-                            <div class="imganh">
-                                <img src="../assets/img/product1.png" alt="">
-                            </div>
-                        </div>
-                        <div class="cartaction">
-                            <div class="productname">
-                                <div class="tenproduct">
-                                    <span class="textname">
-                                        Blaze Mid 77 - White/Blue
-                                    </span><br>
-                                    <span class="textdescripstion">
-                                        Custom made size 39 womens
-                                    </span>
-                                </div>
-                                <div class="deletecart">
-                                    <a href=""><img src="../assets/img/deletecart.png" alt=""></a>
-                                </div>
-                            </div>
-                            <div class="action">
-                                <div class="priceproduct">
-                                    <span class="textprice">
-                                        $ 200
-                                    </span>
-                                </div>
-                                <div class="addcart">
-                                    <input type="text" placeholder="1">
-                                    <a href=""><img src="../assets/img/iconcart.png"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 <div class="caculrator">
                     <div class="textOrder">
