@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,6 +88,13 @@ public class CartController {
     public ResponseEntity<CartItem> deleteCartItemById(@PathVariable Long id) {
         cartItemService.deleteCartItemById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @PutMapping("/cart/updateCartItem")
+    public ResponseEntity<CartItem> updateCartItem(@RequestParam("id") Long id,@RequestParam("quantity") int quantity){
+        CartItem cartItem= cartItemService.findById(id);
+        cartItem.setQuantity(quantity);
+        cartItemService.update(cartItem,id);
+        return ResponseEntity.status(HttpStatus.OK).body(cartItem);
     }
 
 }

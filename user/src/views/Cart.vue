@@ -5,10 +5,11 @@ import { ref, onMounted } from 'vue';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import axios from 'axios';
+import { useRouter, useRoute } from 'vue-router';
 
 const userName = ref('');
 const cartItems = ref([]);
-
+const router = useRouter();
 const decodeToken = (token) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -19,6 +20,14 @@ const decodeToken = (token) => {
 };
 const calculateTotal = (price, discount) => {
     return price * (1 - discount / 100);
+
+};
+const calculateTotal2 = (price, discount) => {
+    return Math.round(price * (1 + discount / 100));
+
+};
+const calculateTotal1 = (price, discount, quantity) => {
+    return price * (1 - discount / 100) * quantity;
 
 };
 const isLoggedIn = () => {
@@ -82,7 +91,34 @@ const deleteProduct = async (id, index) => {
         console.error('Error deleting product:', error);
     }
 }
-
+const updateCartItem = async (cartItem, index) => {
+    try {
+        const response = await axios.put('http://localhost:8080/cart/updateCartItem', null, {
+            params: {
+                id: cartItem.id,
+                quantity: cartItem.quantity
+            }
+        });
+        
+        if (response.status === 200) {
+            Swal.fire("Update!", "Your file has been update.", "success");
+        } else {
+            console.error('Failed to update cart item:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error updating cart item:', error);
+    }
+}
+const goToOrderPage = () => {
+    router.push('/order');
+        };
+const calculateCartTotal = () => {
+    console.log(cartItems.value);
+      return cartItems.value.reduce((total, cartItem) => {
+        const itemTotal = calculateTotal(cartItem?.productDetail?.product?.price, cartItem?.productDetail?.discount) * cartItem?.quantity;
+        return total + itemTotal;
+      }, 0);
+    };
 const getImageUrl = (relativePath) => {
     return `http://localhost:8080/uploads/${relativePath}`;
 };
@@ -120,35 +156,36 @@ onMounted(() => {
             </div>
             <div class="chia">
                 <div class="listcart">
-                    <div class="cartItem" v-for="(cartItem , index) in cartItems" :key="cartItem.id">
+                    <div class="cartItem"  v-for="(cartItem, index) in cartItems" :key="cartItem.id">
+                        <input type="hidden" v-model="cartItem.id">
                         <div class="imgcart">
                             <div class="heartcart">
                                 <img src="../assets/img/heart.png" alt="">
                             </div>
                             <div class="imganh">
-                                <img :src="getImageUrl(cartItem.productDetail.image)" alt="" style="height: 100%;">
+                                <img :src="getImageUrl(cartItem?.productDetail?.image)" alt="">
                             </div>
                         </div>
-                        <div class="cartaction" style="margin-left: -20px;">
+                        <div class="cartaction" style="margin-left:20px">
                             <div class="productname">
-                                <div class="tenproduct">
+                                <div class="tenproduct" style="margin-top:10px;">
                                     <span class="textname">
-                                        {{ cartItem.productDetail.product.productName }}
+                                        {{ cartItem?.productDetail?.product?.productName }}
                                     </span><br>
                                     <span class="textdescripstion">
-                                        Size: {{ cartItem.productDetail.size.sizeName }}
+                                        Size: {{ cartItem?.productDetail?.size?.sizeName }}
                                     </span>
                                 </div>
                                 <div class="deletecart">
-                                    <button @click="deleteProduct(cartItem.id, index)"><img src="../assets/img/deletecart.png"
-                                            alt=""></button>
+                                    <button @click="deleteProduct(cartItem.id, index)"><img
+                                            src="../assets/img/deletecart.png" alt=""></button>
                                 </div>
                             </div>
                             <div class="action">
                                 <div class="priceproduct">
                                     <span class="textprice">
                                         Price: {{
-                                            calculateTotal(cartItem.productDetail.product.price,cartItem.productDetail.discount)
+                                            calculateTotal(cartItem?.productDetail?.product?.price, cartItem?.productDetail?.discount)
                                         }}
                                     </span>
                                 </div>
@@ -156,8 +193,14 @@ onMounted(() => {
                                     <input type="text" placeholder="1"
                                         style="border: 2px solid black; border-radius: 8px;"
                                         v-model="cartItem.quantity">
-                                    <a href=""><img src="../assets/img/iconcart.png"></a>
+                                    <button @click="updateCartItem(cartItem, index)"><img
+                                            src="../assets/img/iconcart.png"></button>
                                 </div>
+                            </div>
+                            <div class="total" style="margin-top: 0%;">
+                                Total : {{
+                                    calculateTotal1(cartItem?.productDetail?.product?.price, cartItem?.productDetail?.discount,cartItem?.quantity)}}
+                                VND
                             </div>
                         </div>
                     </div>
@@ -172,7 +215,7 @@ onMounted(() => {
                             <span>Discount code:</span>
                         </div>
                         <div class="code">
-                            <input type="text" placeholder="SAVE20">
+                            <input type="text" >
                             <button type="submit">Apply</button>
                         </div>
                     </div>
@@ -180,39 +223,42 @@ onMounted(() => {
                         <div class="tieudethanhtoan">
                             <span>Order value :</span><br>
                             <span>VAT :</span><br>
-                            <span>Total before discount :</span><br>
                         </div>
                         <div class="thanhtoan">
-                            <span>$ 1800</span><br>
-                            <span>$ 90</span><br>
-                            <span>$ 2000</span><br>
-                        </div>
+                            <span>{{ calculateCartTotal()}} VND</span><br>
+                            <span>10%</span><br>
+                           
+                        </div> 
                     </div>
                     <div class="total">
                         <div class="textTotal">
                             <span>TOTAL :</span>
                         </div>
                         <div class="gtTotal">
-                            <span>$ 1890</span>
+                            <span>{{ calculateTotal2(calculateCartTotal(),10) }} VND</span><br>
                         </div>
                     </div>
                     <div class="button-total">
-                        <button type="submit"><span>Buy now</span></button>
+                        <button type="submit" @click="goToOrderPage"><span>Buy now</span></button>
                     </div>
 
                 </div>
             </div>
         </div>
-        <div class="backtoindex">
-            <div class="iconback">
-                <a href=""><img src="../assets/img/back.png" alt=""></a>
+        <a href="/">
+            <div class="backtoindex">
+
+                <div class="iconback">
+                    <img src="../assets/img/back.png" alt="">
+                </div>
+                <div class="textback">
+                    <span>
+                        Continue Shopping
+                    </span>
+                </div>
+
             </div>
-            <div class="textback">
-                <span>
-                    Continue Shopping
-                </span>
-            </div>
-        </div>
+        </a>
         <div class="last">
             <div class="container">
                 <div class="textlast">

@@ -10,4 +10,7 @@ public interface CartItemService {
     CartItem create(CartItem cartItem);
     List<CartItem> findCartItemByCart(Cart cart);
     void deleteCartItemById(Long id);
+    void deleteCartItemByCartId(Long cartId);
+    CartItem findById(Long id);
+    CartItem update(CartItem cartItem ,Long id);
 }

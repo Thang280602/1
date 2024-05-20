@@ -20,6 +20,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -90,20 +92,25 @@ public class UserController {
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UserDTO> getById(@PathVariable Optional<Long> id) {
-        // lấy người dùng đang đăng nhập
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        // danh sách roles và permission của người dùng
         List<RoleEnum> roles = customUserDetails.getUser().getRoles().stream().map(role -> role.getRoleName()).toList();
 
-        // kiểm tra
         if (roles.contains(RoleEnum.USER) && (!id.get().equals(customUserDetails.getUser().getId()))) {
             throw new UserNotFoundException(UserConstant.USER_MESSAGE_NOT_FOUND + " id:" + id.get());
         }
         UserDTO userDTO = userService.getById(id.orElseThrow(() -> new UserNotFoundException("ID không hợp lệ")));
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @GetMapping("/getByUserName")
+    public ResponseEntity<UserDTO> getByUserName(@RequestParam("userName") String userName){
+        UserDTO userDTO = userService.findByUserName(userName);
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+    }
+
+
 
     // insert
     @Operation(summary = "Thêm User ",

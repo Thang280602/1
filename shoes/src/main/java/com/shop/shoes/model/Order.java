@@ -33,6 +33,8 @@ public class Order {
     private String addressShip;
     private Date createAt;
     private String phone;
+    private Integer status;
+    private Double totalPrice;
     @ManyToOne
     @JoinColumn(name = "user_Id", referencedColumnName = "id")
     private User user;

@@ -15,11 +15,13 @@ public enum RoleEnum {
             PermissionEnum.ADMIN_UPDATE_USER,
             PermissionEnum.ADMIN_VIEW_USER_DETAILS,
             PermissionEnum.ADMIN_VIEW_ALL_USERS,
-            PermissionEnum.ADMIN_CREATE_CATEGORY
+            PermissionEnum.ADMIN_CREATE_CATEGORY,
+            PermissionEnum.USER_VIEW_USER_GETBYUSERNAME
 
     )),
     USER(Set.of(
-            PermissionEnum.USER_VIEW_USER_DETAILS))// user có quyền: get user detail
+            PermissionEnum.USER_VIEW_USER_DETAILS,PermissionEnum.USER_VIEW_USER_GETBYUSERNAME))
+
     ;
 
     @Getter

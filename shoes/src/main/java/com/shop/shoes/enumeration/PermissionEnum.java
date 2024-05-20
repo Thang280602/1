@@ -12,7 +12,8 @@ public enum PermissionEnum {
     ADMIN_UPDATE_USER("/users/*",PermissionMethodEnum.PUT), // update user
     ADMIN_VIEW_USER_DETAILS("/users/*",PermissionMethodEnum.GET), // xem user chi tiết
     USER_VIEW_USER_DETAILS("/users/*",PermissionMethodEnum.GET),
-    ADMIN_CREATE_CATEGORY("/category/*",PermissionMethodEnum.POST) //tạo mới danh mục
+    ADMIN_CREATE_CATEGORY("/category/*",PermissionMethodEnum.POST),
+    USER_VIEW_USER_GETBYUSERNAME("/users/getByUserName",PermissionMethodEnum.GET)//tạo mới danh mục
     ;
     @Getter
     private final String url;

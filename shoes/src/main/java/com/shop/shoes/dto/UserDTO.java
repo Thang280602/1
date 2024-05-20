@@ -39,7 +39,7 @@ public class UserDTO {
     private String username;
 
     @NotBlank( message = UserConstant.AUTHENTICATION_CODE_NOT_BLANK )
-    private String authenticationCode; // password
+    private String authenticationCode;
 
     private List<RoleDTO> roles;
 
