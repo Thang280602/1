@@ -14,5 +14,5 @@ public class SecurityConstant {
     public static final String PREFIX_ROLE_NAME = "ROLE_";
     public static final int  LAST_INDEX_PREFIX_TOKEN = 7;
 
-    public static final int TOKEN_EXPIRATION = 1000 * 60 * 30; // 30p
+    public static final int TOKEN_EXPIRATION = 1000 * 60 * 60; // 60p
 }

@@ -15,7 +15,11 @@ import com.shop.shoes.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,13 +44,14 @@ public class OrderController {
     @PostMapping("/order/checkout")
     public ResponseEntity<Order> checkout(@RequestParam("userName") String userName,
                                           @RequestParam("addressShip") String addressShip,
-                                          @RequestParam("totalOrderPrice") Double totalOrderPrice) {
+                                          @RequestParam("totalOrderPrice") Double totalOrderPrice
+    ) {
         UserDTO userDTO = this.userService.findByUserName(userName);
         User user = userUtils.mapUserDtoToUser(userDTO);
         Cart cart = this.cartService.findCartByUser(user);
         List<CartItem> cartItems = this.cartItemService.findCartItemByCart(cart);
 
-        // Khởi tạo một đối tượng Order mới
+
         Order order = new Order();
         order.setUser(user);
         order.setCreateAt(new Date());
@@ -67,4 +72,26 @@ public class OrderController {
         this.cartItemService.deleteCartItemByCartId(cart.getId());
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
+
+    @GetMapping("/order/status")
+    public ResponseEntity<List<Order>> getOrdersByStatus(@RequestParam("status") Integer status, @RequestParam("userName") String userName) {
+        UserDTO userDTO = userService.findByUserName(userName);
+        User user = userUtils.mapUserDtoToUser(userDTO);
+        List<Order> orders = orderService.finOrdersByStatus(status, user);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/order/findOrderDetailByOrder/{orderId}")
+    public ResponseEntity<List<OrderDetail>> getOrderDetailByOrder(@PathVariable("orderId") Long id) {
+        Order order = orderService.findById(id);
+        List<OrderDetail> orderDetails = orderDetailService.getByOrderId(order);
+        return ResponseEntity.status(HttpStatus.OK).body(orderDetails);
+    }
+
+    @PutMapping("/order/cancel/{orderId}")
+    public ResponseEntity<Order> updateOrderByStatus(@PathVariable("orderId") Long id) {
+        Order order = orderService.updateStatus(id);
+        return ResponseEntity.status(HttpStatus.OK).body(order);
+    }
+
 }

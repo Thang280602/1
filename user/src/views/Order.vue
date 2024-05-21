@@ -10,8 +10,8 @@ import router from '@/router';
 const userName = ref('');
 const cartItems = ref([]);
 const totalOrderPrice = ref(0);
-const addressShip=ref('');
-
+const addressShip = ref('');
+const paymentMethod = ref('online');
 const user = ref({
     firstName: '',
     lastName: '',
@@ -33,13 +33,13 @@ const calculateTotal = (price, discount) => {
 
 };
 const calculateCartTotal = () => {
-      return cartItems.value.reduce((total, cartItem) => {
+    return cartItems.value.reduce((total, cartItem) => {
         const itemTotal = calculateTotal(cartItem.productDetail.product.price, cartItem.productDetail.discount) * cartItem.quantity;
         return total + itemTotal;
-      }, 0);
-    };
+    }, 0);
+};
 const calculateTotal2 = (price, discount) => {
-    return  Math.round(price * (1 + discount / 100));
+    return Math.round(price * (1 + discount / 100));
 };
 
 const calculateTotal1 = (price, discount, quantity) => {
@@ -70,22 +70,34 @@ const getCart = async () => {
     }
 };
 const saveOrder = async () => {
-    console.log('123');
+    
     try {
-        const response = await axios.post('http://localhost:8080/order/checkout',null,  {
+
+        const response = await axios.post('http://localhost:8080/order/checkout', null, {
             params: {
                 userName: userName.value,
                 totalOrderPrice: totalOrderPrice.value,
                 addressShip: addressShip.value,
-                
+
             },
             headers: {
                 Authorization: `Bearer ${token}` // Gửi token trong tiêu đề Authorization
             }
         });
-        router.push('/')
+        if (paymentMethod.value === 'online') {
+            const orderId = response.data.id;
+            console.log(response.data);
+            console.log(paymentMethod.value);
+            console.log(orderId);
+            const paymentResponse = await axios.get(`http://localhost:8080/order/pay/${orderId}`);
+            window.location.href = paymentResponse.data;
+            
+        } else {
+            alert('Đơn hàng của bạn đã được lưu thành công!');
+        }
+        router.push('/history');
         cartItems.value = response.data;
-        console.log(cartItems.value);
+        console.log(paymentMethod.value);
     } catch (error) {
         console.error('Error adding to order:', error);
         Swal.fire({
@@ -109,11 +121,11 @@ const getUser = async () => {
         }
     });
     user.value = {
-            firstName: response.data.firstName,
-            lastName: response.data.lastName,
-            email: response.data.email,
-            phoneNumber: response.data.phoneNumber
-        };
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        email: response.data.email,
+        phoneNumber: response.data.phoneNumber
+    };
 };
 
 const updateTotalOrderPrice = () => {
@@ -121,7 +133,7 @@ const updateTotalOrderPrice = () => {
     console.log(totalOrderPrice.value);
 };
 
-onMounted(getUser); 
+onMounted(getUser);
 onMounted(getCart);
 onMounted(() => {
     let items = document.querySelectorAll('.carousel .carousel-item')
@@ -193,7 +205,7 @@ onMounted(() => {
                         <div class="col-lg-6">
                             <div class="your-order mb-30 ">
                                 <h3>Your order</h3>
-                                <div class="your-order-table table-responsive" >
+                                <div class="your-order-table table-responsive">
                                     <table>
                                         <thead>
                                             <tr>
@@ -202,20 +214,24 @@ onMounted(() => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="cart_item" v-for="(cartItem, index) in cartItems" :key="cartItem.id">
+                                            <tr class="cart_item" v-for="(cartItem, index) in cartItems"
+                                                :key="cartItem.id">
                                                 <td class="product-name">
-                                                    {{ cartItem.productDetail.product.productName }}<strong class="product-quantity"> × {{ cartItem.quantity }}</strong>
+                                                    {{ cartItem.productDetail.product.productName }}<strong
+                                                        class="product-quantity"> × {{ cartItem.quantity }}</strong>
                                                 </td>
                                                 <td class="product-total">
-                                                    <span class="amount">{{ calculateTotal1(cartItem.productDetail.product.price, cartItem.productDetail.discount,cartItem.quantity)}} VND</span>
+                                                    <span class="amount">{{
+                                                        calculateTotal1(cartItem.productDetail.product.price,
+                                                            cartItem.productDetail.discount, cartItem.quantity) }} VND</span>
                                                 </td>
                                             </tr>
-                                            
+
                                         </tbody>
                                         <tfoot>
                                             <tr class="cart-subtotal">
                                                 <th>Cart Subtotal</th>
-                                                <td><span class="amount">{{ calculateCartTotal()}} VND</span></td>
+                                                <td><span class="amount">{{ calculateCartTotal() }} VND</span></td>
                                             </tr>
                                             <tr class="shipping">
                                                 <th>VAT</th>
@@ -223,20 +239,25 @@ onMounted(() => {
                                             </tr>
                                             <tr class="order-total">
                                                 <th>Order Total</th>
-                                                <td><strong><span class="amount" >{{ calculateTotal2(calculateCartTotal(),10) }} VND</span></strong>
+                                                <td><strong><span class="amount">{{
+                                                    calculateTotal2(calculateCartTotal(), 10) }}
+                                                            VND</span></strong>
                                                 </td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
+                                <div class="paymentMethod" style="display: flex;justify-content: space-around;">
+                                    <input type="radio" name="TT" v-model="paymentMethod" value="online"><span style="margin-left: -8%;">Thanh toán Online</span>
+                                    <br>
+                                    <input type="radio" name="TT" v-model="paymentMethod" value="offline"><span style="margin-left: -8%;">Thanh toán Offline</span><br>
+                                </div>
+                                <div class="payment-method ">
+                                    <div class="order-button-payment mt-20" style="display: flex;align-items: center;
+                                    justify-content: center;" >
+                                        <button type="submit" class="fill-btn">Payment</button>
+                                    </div>
 
-                                <div class="payment-method " style="display: flex;justify-content: space-between;">
-                                    <div class="order-button-payment mt-20">
-                                        <button type="submit" class="fill-btn">Online Payment</button>
-                                    </div>
-                                    <div class="order-button-payment mt-20">
-                                        <button type="submit" class="fill-btn" >Receive payment</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>

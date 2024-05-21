@@ -10,6 +10,8 @@ import FaveriteProduct from '../views/FaveriteProduct.vue'
 import CartHover from '../views/CartHover.vue'
 import Detail from '@/views/Detail.vue'
 import Order from '@/views/Order.vue'
+import History from '@/views/History.vue'
+import Bill from '@/views/Bill.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -62,6 +64,16 @@ const router = createRouter({
       path:'/order',
       name:'order',
       component: Order
+    },
+    {
+      path:'/history',
+      name:'history',
+      component: History
+    },
+    {
+      path:'/bill',
+      name:'bill',
+      component: Bill
     },
  
     

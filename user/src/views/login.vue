@@ -39,7 +39,7 @@ async function login() {
     }
 
     try {
-        debugger
+        
         const response = await axios.post('http://localhost:8080/auth/generateToken', {
             username: form.value.username,
             authenticationCode: form.value.password,
