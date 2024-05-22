@@ -2,7 +2,7 @@
     <header>
         <div class="header">
             <div class="logo">
-                <a href="#"><img class="logo" src="/src/assets/img/logo.png" alt=""></a>
+                <a href="/"><img class="logo" src="/src/assets/img/logo.png" alt=""></a>
             </div>
             <div class="search">
                 <form action=""></form>
@@ -15,7 +15,7 @@
             </div>
             <div class="iconlove">
                 <div class="bag">
-                    <a><img class="bag" src="/src/assets/img/bag.png"></a>
+                    <a href="/cartHover"><img class="bag" src="/src/assets/img/bag.png"></a>
                 </div>
                 <div class="love">
                     <a><img class="love" src="/src/assets/img/heart.png"></a>

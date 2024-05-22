@@ -155,7 +155,7 @@ onMounted(() => {
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="margin-left:18%; margin-bottom: 1%;">Total price: {{ order.totalPrice }}
                                 VND</span>
-                            <button v-if="order.status !== 4" @click="cancelOrder(order.id)"
+                            <button v-if="order.status !== 4 && order.status !==3" @click="cancelOrder(order.id)"
                                 style="background-color: orangered; margin-right: 20%; margin-bottom: 1%; border-radius: 8px; width: 15%; height: 30px;">
                                 <span>Cancel Order</span>
                             </button>

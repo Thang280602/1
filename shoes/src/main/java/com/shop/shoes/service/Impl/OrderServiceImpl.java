@@ -39,6 +39,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order update(Long id,Integer status) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.setStatus(status);
+            return orderRepository.save(order);
+        }else {
+            return null;
+        }
+    }
+
+    @Override
     public Order updateStatus(Long id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
         if (orderOptional.isPresent()) {

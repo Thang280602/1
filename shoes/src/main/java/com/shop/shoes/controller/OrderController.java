@@ -12,6 +12,7 @@ import com.shop.shoes.service.OrderDetailService;
 import com.shop.shoes.service.OrderService;
 import com.shop.shoes.service.UserService;
 import com.shop.shoes.util.UserUtils;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,6 +92,21 @@ public class OrderController {
     @PutMapping("/order/cancel/{orderId}")
     public ResponseEntity<Order> updateOrderByStatus(@PathVariable("orderId") Long id) {
         Order order = orderService.updateStatus(id);
+        return ResponseEntity.status(HttpStatus.OK).body(order);
+    }
+    @GetMapping("/order/getById/{orderId}")
+    public ResponseEntity<Order> geOrderById(@PathVariable("orderId") Long id){
+        Order order = orderService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(order);
+    }
+    @GetMapping("/order")
+    public ResponseEntity<List<Order>> getAll(){
+        List<Order> orders = this.orderService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(orders);
+    }
+    @PutMapping("/order/updateStatus/{orderId}")
+    public ResponseEntity<Order> updateOrder(@PathVariable("orderId") Long id,@RequestParam("status") Integer status){
+        Order order = orderService.update(id,status);
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 

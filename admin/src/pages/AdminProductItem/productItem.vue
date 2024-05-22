@@ -99,7 +99,7 @@ export default {
         },
         async getProducts() {
             try {
-                debugger
+
                 const response = await axios.get('http://localhost:8080/productDetail');
                 this.productsDetail = response.data;
                 console.log(this.productsDetail);
@@ -109,7 +109,7 @@ export default {
         },
         async deleteProduct(id) {
             try {
-                debugger
+
                 const result = await Swal.fire({
                     title: "Are you sure?",
                     text: "You won't be able to revert this!",

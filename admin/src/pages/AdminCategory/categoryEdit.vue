@@ -13,7 +13,7 @@ const router = useRouter();
 
 const loadCategoryInfo = async () => {
     try {
-        debugger
+
         const response = await axios.get(`http://localhost:8080/category/get/${categoryId.value}`);
         const categoryInfo = response.data;
         categoryName.value = categoryInfo.categoryName;

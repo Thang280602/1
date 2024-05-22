@@ -70,7 +70,7 @@ const getData = async () => {
 // Hàm sửa sản phẩm
 const handleSubmit = async () => {
     try {
-        debugger
+
         const formData = new FormData();
         formData.append('fileImage', file.value);
         formData.append('discount', discount.value);

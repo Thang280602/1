@@ -17,7 +17,7 @@ const form = {
 const isPasswordVisible = ref(false)
 async function register() {
   try {
-    debugger
+
     const responsedata = {
       id: userId.value,
       firstName: firstname.value,

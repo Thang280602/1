@@ -94,8 +94,8 @@ const saveOrder = async () => {
             
         } else {
             alert('Đơn hàng của bạn đã được lưu thành công!');
+            router.push('/history');
         }
-        router.push('/history');
         cartItems.value = response.data;
         console.log(paymentMethod.value);
     } catch (error) {

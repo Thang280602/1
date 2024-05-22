@@ -8,6 +8,7 @@ import java.util.List;
 public interface OrderService {
     List<Order> getAll();
     Order create(Order Order);
+    Order update(Long id,Integer status);
     Order updateStatus(Long id);
     Order findById(Long id);
     List<Order> finOrdersByStatus(Integer status, User user);

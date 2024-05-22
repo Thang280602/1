@@ -76,7 +76,7 @@ export default {
         },
         async deleteCategory(id) {
             try {
-                debugger
+
                 const result = await Swal.fire({
                     title: "Are you sure?",
                     text: "You won't be able to revert this!",

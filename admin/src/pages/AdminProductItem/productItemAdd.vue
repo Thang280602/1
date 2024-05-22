@@ -18,6 +18,7 @@ const colors = ref([]);
 const sizes = ref([]);
 const imageName = ref('');
 const file = ref(null);
+const files = ref([]);
 const selectedProduct = ref('');
 const selectedSize = ref('');
 const selectedColor = ref('');
@@ -36,33 +37,49 @@ const handleFileChange = (event) => {
     imageName.value = selectedFile.name;
     image.value = selectedFile;
 };
+const handleFileChange1 = (event) => {
+    const selectedFiles = event.target.files;
+    console.log(selectedFiles);
+    // for (let i = 0; i < selectedFiles.length; i++) {
+    //     files.value.push(selectedFiles[i]);
+    // }
+
+    // files.value.push([...selectedFiles])
+    files.value = selectedFiles;
+
+
+};
 const handleSubmit = async () => {
     try {
-
+        console.log(files.value);
         const formData = new FormData();
         formData.append('fileImage', file.value);
-        console.log('image', file);
+        for (let i = 0; i < files.value.length; i++) {
+            formData.append('fileImages', files.value[i]);
+        }
         formData.append('discount', discount.value);
         formData.append('status', parseInt(productDetailStatus.value));
         formData.append('quantity', quantity.value);
         formData.append('productID', productId.value);
         formData.append('colorID', colorId.value);
         formData.append('sizeID', sizeId.value);
-        console.log(formData);
-        // Chuyển dữ liệu sản phẩm sang JSON và thêm vào FormData
-        // formData.append('productDetailDTO', JSON.stringify(productData));
-        console.log(formData);
-        const response = await axios.post('http://localhost:8080/productDetail/add', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-        console.log('formData', formData);
+
+        // Gửi FormData tương ứng với từng tệp tin
+        const response = await axios.post('http://localhost:8080/productDetail/add', formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
         console.log('Product added:', response.data);
+
+
+        // Hiển thị thông báo thành công và chuyển hướng
         Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: 'Product added successfully!',
+            text: 'Products added successfully!',
             confirmButtonText: 'OK'
         });
         router.push('/productItem');
@@ -71,7 +88,6 @@ const handleSubmit = async () => {
         console.error('Error adding product:', error);
     }
 };
-
 
 const getProducts = async () => {
     try {
@@ -145,16 +161,16 @@ const resetFields = () => {
 
                 </VRow>
             </VCol>
-            <!-- <VCol cols="12">
+            <VCol cols="12">
                 <VRow no-gutters>
                     <VCol cols="12" md="3">
                         <label for="image">Image</label>
                     </VCol>
                     <VCol cols="12" md="6">
-                        <input type="file" @change="handleFileChange" name="files" accept="image/*" multiple />
+                        <input type="file" @change="handleFileChange1" name="files" accept="image/*" multiple />
                     </VCol>
                 </VRow>
-            </VCol> -->
+            </VCol>
             <VCol cols="12">
                 <VRow no-gutters>
                     <!-- 👉 Email -->

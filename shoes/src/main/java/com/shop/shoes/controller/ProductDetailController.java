@@ -3,10 +3,12 @@ package com.shop.shoes.controller;
 import com.shop.shoes.dto.ImageProductDTO;
 import com.shop.shoes.dto.ProductDetailDTO;
 import com.shop.shoes.exception.domain.ExceptionMessage;
+import com.shop.shoes.model.ImageProduct;
 import com.shop.shoes.model.ProductDetail;
 import com.shop.shoes.service.ImageProductSevice;
 import com.shop.shoes.service.ProductDetailService;
 import com.shop.shoes.service.StorageService;
+import com.shop.shoes.util.ImageProductUtils;
 import com.shop.shoes.util.ProductDetailUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +45,12 @@ public class ProductDetailController {
     public final ProductDetailService productDetailService;
     @Autowired
     public final StorageService storageService;
+    @Autowired
+    public final  ImageProductSevice imageProductSevice;
+    @Autowired
+    public final ImageProductUtils imageProductUtils;
+    @Autowired
+    public final ProductDetailUtils productDetailUtils;
 
     @Operation(summary = "Lấy danhh sách tất cả chi tiết sản phẩm",
             description = "Trả về danh sách chi tiết sản phẩm")
@@ -88,10 +97,13 @@ public class ProductDetailController {
     })
     @Secured("ROLE_ADMIN")
     @PostMapping("/add")
-    public ResponseEntity<ProductDetail> create(@Valid @ModelAttribute ProductDetailDTO productDetailDTO, @RequestParam("fileImage") MultipartFile file) {
+    public ResponseEntity<ProductDetail> create(@Valid @ModelAttribute ProductDetailDTO productDetailDTO, @RequestPart("fileImage") MultipartFile file, @RequestParam("fileImages") List<MultipartFile> files) {
         try {
+            // Lưu file ảnh chính
             this.storageService.store(file);
             String fileName = file.getOriginalFilename();
+
+            // Tạo ProductDetailDTO và lưu ProductDetail trước
             ProductDetailDTO productDetailDTOSave = new ProductDetailDTO();
             productDetailDTOSave.setImage(fileName);
             productDetailDTOSave.setProductID(productDetailDTO.getProductID());
@@ -101,10 +113,23 @@ public class ProductDetailController {
             productDetailDTOSave.setSizeID(productDetailDTO.getSizeID());
             productDetailDTOSave.setColorID(productDetailDTO.getColorID());
             productDetailDTOSave.setPrice(productDetailDTO.getPrice());
-            return ResponseEntity.status(HttpStatus.CREATED).body(productDetailService.createProductDetail(productDetailDTOSave));
+            ProductDetail savedProductDetail = productDetailService.createProductDetail(productDetailDTOSave);
+            for (MultipartFile multipartFile : files) {
+                this.storageService.store(multipartFile);
+                ImageProduct imageProduct = new ImageProduct();
+                imageProduct.setImage(multipartFile.getOriginalFilename());
+
+                imageProduct.setProductDetail(savedProductDetail);
+
+                ImageProductDTO imageProductDTO = imageProductUtils.mapImageProducttoImageProductDTO(imageProduct);
+                this.imageProductSevice.create(imageProductDTO);
+            }
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProductDetail);
         } catch (Exception e) {
-            throw new ExceptionMessage("Lỗi không thêm được chi tiết sản phẩm");
+            throw new ExceptionMessage(e.getMessage());
         }
+
 
     }
 

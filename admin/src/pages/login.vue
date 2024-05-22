@@ -22,6 +22,7 @@ async function login() {
     });
 
     const token = response.data.token;
+
     console.log('role', decodeToken.role)
     const decodedToken = decodeToken(token);
     console.log(decodedToken.sub);
