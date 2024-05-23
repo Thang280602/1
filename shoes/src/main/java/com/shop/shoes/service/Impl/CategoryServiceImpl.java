@@ -32,20 +32,21 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public List<Category> getAll() {
-        return categoryRepository.findAll().stream().collect(Collectors.toList());
+    public List<CategoryDTO> getAll() {
+        return categoryRepository.findAll().stream().map(category -> categoryUtils.mapCategorytoCategoryDto(category)).collect(Collectors.toList());
     }
 
     @Override
-    public Category findCategoryById(Long id) {
+    public CategoryDTO findCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryConstant.CATEGORY_NOT_FOUND));
-        return category;
+        CategoryDTO categoryDTO = categoryUtils.mapCategorytoCategoryDto(category);
+        return categoryDTO;
     }
 
 
     @Override
-    public Category createCategory(CategoryDTO categoryDTO) {
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         if (categoryDTO.getId() != null) {
             throw new IllegalArgumentException("Cannot create a category with a predefined ID.");
         }
@@ -54,14 +55,15 @@ public class CategoryServiceImpl implements CategoryService {
 
         try {
             Category savedCategory = categoryRepository.save(category);
-            return savedCategory;
+
+            return categoryUtils.mapCategorytoCategoryDto(savedCategory);
         } catch (DataIntegrityViolationException e) {
             throw new CategoryNotFoundException(CategoryConstant.CATEGORY_ALREADY_EXITS);
         }
     }
 
     @Override
-    public Category updateCategory(Long id, CategoryDTO categoryDTO) {
+    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
         if (id != categoryDTO.getId()) {
             throw new CategoryNotFoundException(CategoryConstant.CATEGORY_NOT_FOUND);
         }
@@ -69,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         try {
             Category savedCategory = categoryRepository.save(category);
-            return savedCategory;
+            return categoryUtils.mapCategorytoCategoryDto(savedCategory);
         } catch (DataIntegrityViolationException e) {
             throw new CategoryNotFoundException(CategoryConstant.CATEGORY_ALREADY_EXITS);
         }

@@ -22,8 +22,6 @@ public class ProductDetailDTO {
 
     private String image;
 
-    private Double price;
-
     private Boolean status;
 
     private int quantity;

@@ -16,6 +16,8 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -52,7 +55,8 @@ public class UserController {
     private final UserService userService;
 
     private static final String ROLE_ADMIN = RoleEnum.ADMIN.toString();
-
+    @Autowired
+    private MessageSource messageSource;
     // get all
 
     /**
@@ -98,7 +102,7 @@ public class UserController {
         List<RoleEnum> roles = customUserDetails.getUser().getRoles().stream().map(role -> role.getRoleName()).toList();
 
         if (roles.contains(RoleEnum.USER) && (!id.get().equals(customUserDetails.getUser().getId()))) {
-            throw new UserNotFoundException(UserConstant.USER_MESSAGE_NOT_FOUND + " id:" + id.get());
+            throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_MESSAGE_NOT_FOUND, null, Locale.getDefault()));
         }
         UserDTO userDTO = userService.getById(id.orElseThrow(() -> new UserNotFoundException("ID không hợp lệ")));
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);

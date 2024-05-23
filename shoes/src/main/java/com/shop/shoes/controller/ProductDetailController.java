@@ -89,6 +89,16 @@ public class ProductDetailController {
         ProductDetail productDetailDTO = productDetailService.findProductDetailByColorNameAndSizeName(id,colorName, sizeName);
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
+    @Operation(summary = "Lấy sản phẩm theo color name và size name",
+            description = "Trả về chi tiết sản phẩm")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trả về danh sách chi tiết sản phẩm")})
+    @GetMapping("/findImageDescription")
+    public ResponseEntity<List<ImageProductDTO>> findImageDiscription(@RequestParam("productId") Long id , @RequestParam("colorName") String colorName, @RequestParam("sizeName") String sizeName) {
+        ProductDetail productDetailDTO = productDetailService.findProductDetailByColorNameAndSizeName(id,colorName, sizeName);
+        List<ImageProductDTO> imageProductDTO = this.imageProductSevice.findByProductDetail(productDetailDTO.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(imageProductDTO);
+    }
     @Operation(summary = "Thêm  sản phẩm chi tiết",
             description = "Trả về sản phẩm chi tiết và thông tin message trạng thái")
     @ApiResponses(value = {
@@ -112,7 +122,6 @@ public class ProductDetailController {
             productDetailDTOSave.setDiscount(productDetailDTO.getDiscount());
             productDetailDTOSave.setSizeID(productDetailDTO.getSizeID());
             productDetailDTOSave.setColorID(productDetailDTO.getColorID());
-            productDetailDTOSave.setPrice(productDetailDTO.getPrice());
             ProductDetail savedProductDetail = productDetailService.createProductDetail(productDetailDTOSave);
             for (MultipartFile multipartFile : files) {
                 this.storageService.store(multipartFile);
@@ -156,7 +165,7 @@ public class ProductDetailController {
             productDetailDTOUpdate.setDiscount(productDetailDTO.getDiscount());
             productDetailDTOUpdate.setSizeID(productDetailDTO.getSizeID());
             productDetailDTOUpdate.setColorID(productDetailDTO.getColorID());
-            productDetailDTOUpdate.setPrice(productDetailDTO.getPrice());
+
         }
         ProductDetail reponseDTO = productDetailService.updateProductDetail(id, productDetailDTOUpdate);
         return ResponseEntity.status(HttpStatus.OK).body(reponseDTO);

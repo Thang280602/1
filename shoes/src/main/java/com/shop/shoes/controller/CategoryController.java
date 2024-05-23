@@ -38,8 +38,8 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trả về danh sách danh muc")})
     @GetMapping("")
-    public ResponseEntity<List<Category>> getAll() {
-        List<Category> categoryDTOS = categoryService.getAll();
+    public ResponseEntity<List<CategoryDTO>> getAll() {
+        List<CategoryDTO> categoryDTOS = categoryService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(categoryDTOS);
     }
     @Operation(summary = "Lấy  danh muc theo id",
@@ -47,8 +47,8 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trả về danh sách danh muc")})
     @GetMapping("/get/{id}")
-    public ResponseEntity<Category> getCategoryByID(@PathVariable  Long id) {
-        Category categoryDTOS = categoryService.findCategoryById(id);
+    public ResponseEntity<CategoryDTO> getCategoryByID(@PathVariable  Long id) {
+        CategoryDTO categoryDTOS = categoryService.findCategoryById(id);
         return ResponseEntity.status(HttpStatus.OK).body(categoryDTOS);
     }
 
@@ -61,9 +61,9 @@ public class CategoryController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/add")
-    public ResponseEntity<Category> create(@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> create(@Valid @RequestBody CategoryDTO categoryDTO) {
 
-        Category responseDTO = categoryService.createCategory(categoryDTO);
+        CategoryDTO responseDTO = categoryService.createCategory(categoryDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
@@ -78,8 +78,8 @@ public class CategoryController {
     @Parameters({@Parameter(name = "CategoryDTO", description = "Thông tin cần update "),
             @Parameter(name = "id", description = "id của danh muc  cần update")})
     @PutMapping("/update/{id}")
-    public ResponseEntity<Category> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO, @PathVariable Long id) {
-        Category reponseDTO = categoryService.updateCategory(id, categoryDTO);
+    public ResponseEntity<CategoryDTO> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO, @PathVariable Long id) {
+        CategoryDTO reponseDTO = categoryService.updateCategory(id, categoryDTO);
         return ResponseEntity.status(HttpStatus.OK).body(reponseDTO);
     }
 

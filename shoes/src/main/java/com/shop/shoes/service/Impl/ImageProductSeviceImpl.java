@@ -5,12 +5,17 @@ import com.shop.shoes.dto.ImageProductDTO;
 import com.shop.shoes.exception.domain.CategoryNotFoundException;
 import com.shop.shoes.exception.domain.ImageProductException;
 import com.shop.shoes.model.ImageProduct;
+import com.shop.shoes.model.ProductDetail;
 import com.shop.shoes.repository.ImageProductRepository;
 import com.shop.shoes.service.ImageProductSevice;
 import com.shop.shoes.util.ImageProductUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,6 +40,15 @@ public class ImageProductSeviceImpl implements ImageProductSevice {
 			throw new ImageProductException("Lỗi khi thêm ảnh");
 		}
 	}
+
+	@Override
+	public List<ImageProductDTO> findByProductDetail(Long id) {
+		List<ImageProduct> imageProducts = this.imageProductRepository.findImageProductByProductDetail(id);
+		return imageProducts.stream()
+				.map(imageProductUtils::mapImageProducttoImageProductDTO)
+				.collect(Collectors.toList());
+	}
+
 	@Override
 	public void deleteByProductDetailId(Long id) {
 		try {

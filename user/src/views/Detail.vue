@@ -1,6 +1,6 @@
 <template>
     <TheHeader></TheHeader>
-    <div class="section__product">
+    <div class="section__product" style="margin-bottom: 300px;">
 
         <div class="section__product_left">
             <div class="section__product_left__top">
@@ -15,14 +15,12 @@
             </div>
             <div class="section__product_left__bottom">
 
-                <div v-if="images" class="section__product_left__bottom__thumbnails">
-                    <div v-for="(item, index) in colors" :key="index" class="section__product_left__bottom__item"
-                        :class="{ active: selectedColor === item.color }" @click="setColor(item.color, item.image)">
-                        <img :src="images[item.image]" alt="">
+                <div class="section__product_left__bottom__thumbnails">
+                    <div v-for="(item, index) in findImageDescription" :key="index"
+                        class="section__product_left__bottom__item">
+                        <img :src="getImageUrl(item.image)" alt="">
                     </div>
                 </div>
-                <div class="arrow__left">&lt;</div>
-                <div class="arrow__right">&gt;</div>
             </div>
         </div>
         <div class="section__product__right">
@@ -126,14 +124,13 @@
     <TheFooter></TheFooter>
 </template>
 <script>
-import { ref, onMounted, watch, onUpdated } from 'vue';
+import { ref, onMounted, onUpdated, watch } from 'vue';
 import TheHeader from '../components/Header.vue';
 import TheFooter from '../components/Footer.vue';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import { param } from 'jquery';
 
 export default {
     name: 'Detail',
@@ -155,10 +152,10 @@ export default {
         const product = ref(null);
         const productDetail = ref(null);
         const productDetailByColorNameAndSizeName = ref(null);
+        const findImageDescription = ref([]);
         const colors = ref([]);
         const totalPriceAfterDiscount = ref(0);
         const userName = ref('');
-        // const userName = ref('');
 
         const colorMapping = {
             'Red': 'rgba(223, 56, 50, 1)',
@@ -167,6 +164,7 @@ export default {
             'White': 'rgba(238, 238, 238, 1)',
             'Dark': 'rgba(116, 99, 82, 1)'
         };
+
         const fetchColors = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/color');
@@ -198,14 +196,14 @@ export default {
 
         const setSize = async (size) => {
             selectedSize.value = size;
-            // await callBackend();
         };
+
         const setColor = async (color) => {
             selectedColor.value = color;
-            // await callBackend();
         };
+
         const setAmount = (value) => {
-            if (amount.value + value >= 0) { // Đảm bảo số lượng không âm
+            if (amount.value + value >= 0) {
                 amount.value += value;
             }
         };
@@ -213,6 +211,7 @@ export default {
         onMounted(() => {
             fetchColors();
         });
+
         const fetchSizes = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/size');
@@ -246,11 +245,8 @@ export default {
             });
         };
 
-
-
         const getProductById = async () => {
             try {
-
                 const response = await axios.get(`http://localhost:8080/product/get/${productId.value}`);
                 product.value = response.data;
                 curentImage.value = `http://localhost:8080/uploads/${product.value.image}`;
@@ -258,15 +254,16 @@ export default {
                 console.error('Error:', error);
             }
         };
+
         const getProductDetailByProductId = async () => {
             try {
-
                 const response = await axios.get(` http://localhost:8080/productDetail/findProductDetailByProductId/${productId.value}`);
                 productDetail.value = response.data;
             } catch (error) {
                 console.error('Error:', error);
             }
         };
+
         const callBackend = async () => {
             try {
                 if (selectedColor.value && selectedSize.value) {
@@ -277,11 +274,9 @@ export default {
                             sizeName: selectedSize.value.sizeName
                         }
                     });
-                    console.log(typeof (productId.value));
                     if (response.data) {
                         productDetailByColorNameAndSizeName.value = response.data;
                     } else {
-                        // Hiển thị cửa sổ SweetAlert2 nếu không có dữ liệu trả về từ API
                         Swal.fire({
                             icon: 'warning',
                             title: 'Thông báo',
@@ -289,7 +284,6 @@ export default {
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Reset selectedColor và selectedSize về null
                                 selectedColor.value = null;
                                 selectedSize.value = null;
                             }
@@ -306,15 +300,41 @@ export default {
                 });
             }
         };
-        const calculateTotal = () => {
 
+        const callBackend1 = async () => {
+            try {
+                if (selectedColor.value && selectedSize.value) {
+                    const response = await axios.get('http://localhost:8080/productDetail/findImageDescription', {
+                        params: {
+                            productId: productId.value,
+                            colorName: selectedColor.value,
+                            sizeName: selectedSize.value.sizeName
+                        }
+                    });
+                    findImageDescription.value = response.data;
+                    console.log(response.data);
+                }
+            } catch (error) {
+                console.error('Error', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while fetching data from the API!',
+                    confirmButtonText: 'OK'
+                });
+            }
+        };
+
+        const getImageUrl = (relativePath) => {
+            console.log(relativePath);
+            return `http://localhost:8080/uploads/${relativePath}`;
+        };
+        const calculateTotal = () => {
             if (product.value) {
                 const price = product.value.price;
-
                 const discount = productDetailByColorNameAndSizeName.value?.discount ? productDetailByColorNameAndSizeName.value?.discount : 0;
                 totalPriceAfterDiscount.value = price * (1 - discount / 100);
             }
-
         };
 
         const decodeToken = (token) => {
@@ -335,15 +355,13 @@ export default {
             userName.value = decodedToken.sub;
             return !!token;
         };
-        // Thêm sản phẩm vào giỏ hàng
+
         const addToCart = async () => {
             if (!isLoggedIn()) {
-
                 router.push('/login');
                 return;
             }
             try {
-                
                 const response = await axios.post('http://localhost:8080/cart/add', null, {
                     params: {
                         productId: productId.value,
@@ -374,13 +392,13 @@ export default {
                 });
             }
         };
+
         onMounted(callBackend);
         onMounted(getProductDetailByProductId);
         onMounted(getProductById);
-        onMounted(() => {
-            fetchImages();
-
-
+        onMounted(fetchImages);
+        onMounted(callBackend1);
+        onMounted(async () => {
             let items = document.querySelectorAll('.carousel .carousel-item');
             items.forEach((el) => {
                 const minPerSlide = 6;
@@ -395,15 +413,20 @@ export default {
                 }
             });
         });
-        // watch(selectedColor, selectedSize, () => {
-        //     calculateTotal();
-        //     console.log("aaaa");
-        // })
+
         onUpdated(async () => {
-            await callBackend()
+            await callBackend();
             calculateTotal();
+        });
+
+        watch([selectedColor, selectedSize],async ()=>{
+     
+            await callBackend1();
         })
+
         return {
+            getImageUrl,
+            findImageDescription,
             addToCart,
             totalPriceAfterDiscount,
             productDetail,

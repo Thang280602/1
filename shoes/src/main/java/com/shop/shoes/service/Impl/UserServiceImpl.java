@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,7 +44,8 @@ public class UserServiceImpl implements UserService {
     private JavaMailSender mailSender;
     @Autowired
     private final PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private MessageSource messageSource;
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserUtils userUtils, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -59,7 +62,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getById(Long id) {
 
         return userRepository.findById(id).map(user -> userUtils.mapUserToUserDto(user)).orElseThrow(
-                () -> new UserNotFoundException(UserConstant.USER_NOT_FOUND)
+                () -> new UserNotFoundException(UserConstant.USER_MESSAGE_NOT_FOUND)
         );
     }
 
@@ -67,11 +70,11 @@ public class UserServiceImpl implements UserService {
     public UserDTO create(UserDTO userDTO,String siteURL) throws UnsupportedEncodingException, MessagingException{
         if (userDTO.getId()!= null && userRepository.existsById(userDTO.getId())
          ) {
-            throw new IllegalArgumentException("User này đã tồn tại");
+            throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, null, Locale.getDefault()));
         }
         if ( userRepository.existsByUsername(userDTO.getUsername())
         ) {
-            throw new IllegalArgumentException("UserName này đã tồn tại");
+            throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, null, Locale.getDefault()));
         }
         List<Role> roles = Arrays.asList(roleRepository.findByRoleName(RoleEnum.USER).get());
         User user = userUtils.mapUserDtoToUser(userDTO);
@@ -81,19 +84,18 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         user.setRoles(roles);
         try {
-
             User savedUser = userRepository.save(user);
             sendVerificationEmail(savedUser, siteURL);
             return userUtils.mapUserToUserDto(savedUser);
         } catch (DataIntegrityViolationException e) {
-            throw new UserNotFoundException(UserConstant.USER_NOT_FOUND);
+            throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, null, Locale.getDefault()));
         }
     }
 
     @Override
     public UserDTO update(Long id, UserDTO userDTO) throws Exception {
         if (!userDTO.getId().equals(id)) {
-            throw new CategoryNotFoundException(UserConstant.USER_NOT_FOUND);
+            throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_MESSAGE_NOT_FOUND, null, Locale.getDefault()));
         }
         User user = userUtils.mapUserDtoToUser(userDTO);
         user.setAuthenticationCode(passwordEncoder.encode(userDTO.getAuthenticationCode()));
@@ -101,7 +103,7 @@ public class UserServiceImpl implements UserService {
         List<Role> updatedRoles = userUtils.mapRoles(userDTO.getRoles());
         for (Role role : updatedRoles) {
             if (!roleRepository.existsById(role.getId())) {
-                throw new UserNotFoundException(UserConstant.ROLE_NOT_FOUND);
+                throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_MESSAGE_NOT_FOUND, null, Locale.getDefault()));
             }
         }
         user.setRoles(updatedRoles);
@@ -109,7 +111,7 @@ public class UserServiceImpl implements UserService {
             User saveUser = userRepository.save(user);
             return userUtils.mapUserToUserDto(saveUser);
         } catch (DataIntegrityViolationException e) {
-            throw new UserNotFoundException(UserConstant.USER_NOT_FOUND);
+            throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_NOT_FOUND_BY_USERNAME, null, Locale.getDefault()));
         }
     }
 
@@ -117,7 +119,7 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
-            throw new UserNotFoundException(UserConstant.USER_NOT_FOUND);
+            throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_MESSAGE_NOT_FOUND, null, Locale.getDefault()));
         }
         userRepository.deleteById(id);
     }
@@ -125,7 +127,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findByUserName(String userName) {
         return userRepository.findByUsername(userName).map(user -> userUtils.mapUserToUserDto(user)).orElseThrow(
-                () -> new UserNotFoundException(UserConstant.USER_NOT_FOUND)
+                () -> new UserNotFoundException(UserConstant.USER_MESSAGE_NOT_FOUND)
         );
     }
 

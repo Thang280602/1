@@ -17,7 +17,7 @@ const form = {
 const isPasswordVisible = ref(false)
 async function register() {
   try {
-
+    debugger
     const responsedata = {
       id: userId.value,
       firstName: firstname.value,
@@ -26,8 +26,10 @@ async function register() {
       username: username.value,
       authenticationCode: password.value,
       email: email.value
-    }
-    const request = await axios.post('http://localhost:8080/users/add', responsedata)
+    };
+
+    const request = await axios.post('http://localhost:8080/users/add', responsedata);
+
     Swal.fire({
       position: "top-end",
       icon: "success",
@@ -36,16 +38,24 @@ async function register() {
       timer: 1500
     });
     router.push('/login');
-    console.log("request", request);
-    console.log("reponsedata", responsedata);
   } catch (error) {
-    Swal.fire({
-      icon: "question",
-      title: "Error...",
-      text: "Account registration failed"
-    });
+    if (error.response && error.response.data) {
+      const errors = error.response.data;
+      let errorMessage = "Account registration failed:<br>";
+      for (const [field, message] of Object.entries(errors)) {
+        errorMessage += `${field}: ${message}<br>`;
+      }
+      Swal.fire({
+        icon: "error",
+        title: "Error...",
+        html: errorMessage
+      });
+    } else {
+      console.error(error);
+    }
   }
 }
+
 </script>
 
 <template>
