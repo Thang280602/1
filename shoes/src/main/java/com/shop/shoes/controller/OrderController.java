@@ -5,15 +5,22 @@ import com.shop.shoes.model.Cart;
 import com.shop.shoes.model.CartItem;
 import com.shop.shoes.model.Order;
 import com.shop.shoes.model.OrderDetail;
+import com.shop.shoes.model.Product;
+import com.shop.shoes.model.ProductDetail;
 import com.shop.shoes.model.User;
 import com.shop.shoes.service.CartItemService;
 import com.shop.shoes.service.CartService;
 import com.shop.shoes.service.OrderDetailService;
 import com.shop.shoes.service.OrderService;
+import com.shop.shoes.service.ProductDetailService;
+import com.shop.shoes.service.ProductService;
 import com.shop.shoes.service.UserService;
 import com.shop.shoes.util.OrderDetailUtils;
 import com.shop.shoes.util.OrderUtils;
+import com.shop.shoes.util.ProductDetailUtils;
 import com.shop.shoes.util.UserUtils;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -44,14 +52,19 @@ public class OrderController {
     @Autowired
     public OrderDetailService orderDetailService;
     @Autowired
+    public ProductDetailService productDetailService;
+    @Autowired
     public OrderUtils orderUtils;
     @Autowired
     public OrderDetailUtils orderDetailUtils;
+    @Autowired
+    public ProductDetailUtils productDetailUtils;
     @PostMapping("/order/checkout")
     public ResponseEntity<Order> checkout(@RequestParam("userName") String userName,
                                           @RequestParam("addressShip") String addressShip,
-                                          @RequestParam("totalOrderPrice") Double totalOrderPrice
-    ) {
+                                          @RequestParam("totalOrderPrice") Double totalOrderPrice,
+                                          HttpServletRequest request
+    ) throws UnsupportedEncodingException, MessagingException {
         UserDTO userDTO = this.userService.findByUserName(userName);
         User user = userUtils.mapUserDtoToUser(userDTO);
         Cart cart = this.cartService.findCartByUser(user);
@@ -73,8 +86,12 @@ public class OrderController {
             orderDetail.setProductDetail(cartItem.getProductDetail());
             orderDetail.setQuantity(cartItem.getQuantity());
             this.orderDetailService.add(orderDetail);
+            ProductDetail productDetail = productDetailService.findById(cartItem.getProductDetail().getId());
+            productDetail.setQuantity(productDetail.getQuantity()-orderDetail.getQuantity());
+            productDetailService.updateProductDetail(productDetail.getId(),productDetailUtils.mapProductDetailToProductDetailDTO(productDetail));
         }
         this.cartItemService.deleteCartItemByCartId(cart.getId());
+        userService.sendOrderConfirmationEmail(user,order, getSiteURL(request));
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
@@ -113,5 +130,8 @@ public class OrderController {
         Order order = orderService.update(id,status);
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
-
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
 }

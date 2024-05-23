@@ -5,6 +5,7 @@ import com.shop.shoes.dto.UserDTO;
 import com.shop.shoes.enumeration.RoleEnum;
 import com.shop.shoes.exception.domain.CategoryNotFoundException;
 import com.shop.shoes.exception.domain.UserNotFoundException;
+import com.shop.shoes.model.Order;
 import com.shop.shoes.model.Role;
 import com.shop.shoes.model.User;
 import com.shop.shoes.repository.RoleRepository;
@@ -154,6 +155,40 @@ public class UserServiceImpl implements UserService {
         String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
 
         content = content.replace("[[URL]]", verifyURL);
+
+        helper.setText(content, true);
+
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendOrderConfirmationEmail(User user, Order order, String siteURL) throws MessagingException, UnsupportedEncodingException {
+        String toAddress = user.getEmail();
+        String fromAddress = "thang.danghuu@vti.com.vn";
+        String senderName = "Order Confirmation";
+        String subject = "Order Confirmation - Order #" + order.getId();
+        String content = "Dear [[name]],<br>"
+                + "Thank you for your order. Your order has been successfully placed.<br>"
+                + "Order Details:<br>"
+                + "<ul>"
+                + "<li>Order Number: " + order.getId() + "</li>"
+                + "<li>Order Date: " + order.getCreateAt() + "</li>"
+                + "<li>Order Address: " + order.getAddressShip() + "</li>"
+                + "<li>Order Telephone: " + order.getPhone() + "</li>"
+                + "<li> Total:  " + order.getTotalPrice() + " VND " + "</li>"
+                + "</ul>"
+                + "For further inquiries or assistance, please contact us.<br>"
+                + "Thank you for choosing us,<br>"
+                + "Đặng Hữu Thắng.";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        content = content.replace("[[name]]", user.getUsername());
 
         helper.setText(content, true);
 

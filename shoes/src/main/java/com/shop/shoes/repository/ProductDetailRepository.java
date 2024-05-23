@@ -1,5 +1,6 @@
 package com.shop.shoes.repository;
 
+import com.shop.shoes.model.Product;
 import com.shop.shoes.model.ProductDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,5 +15,4 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail,Lon
 
     @Query("select p from ProductDetail p where p.product.id = :productId and p.color.colorName = :colorName and p.size.sizeName = :sizeName")
     ProductDetail findProductDetailByColorNameAndSizeName(@Param("productId") Long id , @Param("colorName") String colorName, @Param("sizeName") String sizeName);
-
 }

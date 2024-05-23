@@ -378,20 +378,25 @@ export default {
                         text: 'Sản phẩm đã được thêm vào giỏ hàng!',
                         confirmButtonText: 'OK'
                     });
-                    router.push('/cart')
+                    router.push('/cart');
                 } else {
                     throw new Error('Failed to add product to cart');
                 }
             } catch (error) {
                 console.error('Error adding to cart:', error);
+                let errorMessage = 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!';
+                if (error.response && error.response.data && error.response.data.message) {
+                    errorMessage = error.response.data.message;
+                }
                 Swal.fire({
                     icon: 'error',
                     title: 'Lỗi',
-                    text: 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!',
+                    text: errorMessage,
                     confirmButtonText: 'OK'
                 });
             }
         };
+
 
         onMounted(callBackend);
         onMounted(getProductDetailByProductId);
@@ -419,8 +424,8 @@ export default {
             calculateTotal();
         });
 
-        watch([selectedColor, selectedSize],async ()=>{
-     
+        watch([selectedColor, selectedSize], async () => {
+
             await callBackend1();
         })
 

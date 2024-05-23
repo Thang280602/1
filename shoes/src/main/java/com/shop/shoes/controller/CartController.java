@@ -1,5 +1,6 @@
 package com.shop.shoes.controller;
 
+import com.shop.shoes.constant.UserConstant;
 import com.shop.shoes.dto.UserDTO;
 import com.shop.shoes.model.Cart;
 import com.shop.shoes.model.CartItem;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 public class CartController {
@@ -41,10 +44,9 @@ public class CartController {
     @Autowired
     private CartItemService cartItemService;
     @Autowired
-    private ProductService productService;
-    @Autowired
     private CartUtils cartUtils;
-
+    @Autowired
+    private MessageSource messageSource;
     @PostMapping("/cart/add")
     public ResponseEntity<Void> addCart(@RequestParam("productId") Long productId, @RequestParam("colorName") String colorName,
                                         @RequestParam("sizeName") String sizeName,
@@ -58,20 +60,24 @@ public class CartController {
             cartService.createCart(cartUtils.mapCarttoCartDTO(cart));
         }
         ProductDetail productDetail = productDetailService.findProductDetailByColorNameAndSizeName(productId, colorName, sizeName);
-        Cart cartFindByUser = cartService.findCartByUser(user);
-        CartItem cartItem = new CartItem();
-        cartItem.setCart(cartFindByUser);
-        CartItem checkCartItem = this.cartItemService.checkCardItem(cartFindByUser.getId(), productDetail.getId());
-        if (checkCartItem != null) {
-            checkCartItem.setQuantity(checkCartItem.getQuantity() + amount);
-            this.cartItemService.create(checkCartItem);
-        } else {
-            cartItem.setProductDetail(productDetail);
-            cartItem.setQuantity(amount);
+        if(amount <= productDetail.getQuantity()) {
+            Cart cartFindByUser = cartService.findCartByUser(user);
+            CartItem cartItem = new CartItem();
             cartItem.setCart(cartFindByUser);
-            this.cartItemService.create(cartItem);
+            CartItem checkCartItem = this.cartItemService.checkCardItem(cartFindByUser.getId(), productDetail.getId());
+            if (checkCartItem != null) {
+                checkCartItem.setQuantity(checkCartItem.getQuantity() + amount);
+                this.cartItemService.create(checkCartItem);
+            } else {
+                cartItem.setProductDetail(productDetail);
+                cartItem.setQuantity(amount);
+                cartItem.setCart(cartFindByUser);
+                this.cartItemService.create(cartItem);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            throw new RuntimeException(messageSource.getMessage("exception.user.add_cart_error", null, Locale.getDefault()));
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Lấy danhh sách cartItem",
