@@ -1,5 +1,6 @@
 package com.shop.shoes.service.Impl;
 
+import com.shop.shoes.dto.CategoryDTO;
 import com.shop.shoes.dto.ProductDTO;
 import com.shop.shoes.exception.domain.ExceptionMessage;
 import com.shop.shoes.model.Category;
@@ -39,17 +40,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public  Product findById(Long id) {
-        Product product = productRepository.findById(id)
+    public Product findById(Long id) {
+        return  productRepository.findById(id)
                 .orElseThrow(() -> new ExceptionMessage("Không tìm thấy product có id trên"));
-        return product;
     }
 
     @Override
-    public Product createProduct(ProductDTO productDTO,String fileName) {
+    public Product createProduct(ProductDTO productDTO, String fileName) {
 
         Product product = productUtils.mapProductDtotoProduct(productDTO);
-        Optional<Category> category = categoryRepository.findById(product.getCategory().getId());
+        Optional<Category> category = categoryRepository.findById(productDTO.getCategoryID());
         if (category.isPresent()) {
             Product productSave = new Product();
             productSave.setCategory(category.get());
@@ -59,22 +59,22 @@ public class ProductServiceImpl implements ProductService {
             productSave.setImage(fileName);
             productSave.setProductName(product.getProductName());
             productSave.setProductStatus(product.getProductStatus());
-            Product savedProduct = productRepository.save(productSave);
-            return savedProduct;
+
+            return productRepository.save(productSave);
         } else {
             throw new ExceptionMessage("Không thêm được product: ");
         }
     }
 
     @Override
-    public Product updateProduct(Long id, ProductDTO productDTO,String fileName) {
-
+    public Product updateProduct(Long id, ProductDTO productDTO, String fileName) {
         Product productOld = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sản phẩm này không tồn tại"));
 
         if (!id.equals(productDTO.getId())) {
             throw new RuntimeException("Id của sản phẩm không khớp với id của sản phẩm cũ");
         }
+
         Category categoryByID = categoryRepository.findById(productDTO.getCategoryID())
                 .orElseThrow(() -> new RuntimeException("Danh mục của sản phẩm này không tồn tại"));
         productOld.setPrice(productDTO.getPrice());
@@ -84,8 +84,7 @@ public class ProductServiceImpl implements ProductService {
         productOld.setProductStatus(productDTO.getProductStatus());
         productOld.setImage(fileName);
         productOld.setCategory(categoryByID);
-        Product savedProduct = productRepository.save(productOld);
-        return savedProduct;
+        return productRepository.save(productOld);
     }
 
     @Override

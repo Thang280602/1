@@ -54,7 +54,7 @@
                         {{ product.description }}
                     </td>
                     <td class="text-center">
-                        {{ product.category.categoryName }}
+                        {{ product?.category?.categoryName }}
                     </td>
                     <td class="text-center">
                         {{ product.price }}

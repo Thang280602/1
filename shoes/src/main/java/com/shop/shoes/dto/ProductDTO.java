@@ -22,6 +22,7 @@ public class ProductDTO {
 
     private  Double price;
 
+
     private String productName;
 
     private String productAddress;

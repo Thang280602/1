@@ -38,9 +38,9 @@ public class ColorServiceImpl implements ColorService {
     public Color create(ColorDTO colorDTO) {
         Color color = colorUtils.mapColorDTOtoColor(colorDTO);
         try {
-            Color colorSave = colorRepository.save(color);
-            return colorSave;
-        }catch (Exception e){
+            return colorRepository.save(color);
+
+        } catch (Exception e) {
             throw new ExceptionMessage("Không thêm được color");
         }
     }

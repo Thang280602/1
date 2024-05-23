@@ -10,6 +10,7 @@ import com.shop.shoes.service.CartService;
 import com.shop.shoes.service.Impl.UserServiceImpl;
 import com.shop.shoes.service.ProductDetailService;
 import com.shop.shoes.service.ProductService;
+import com.shop.shoes.util.CartUtils;
 import com.shop.shoes.util.UserUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,6 +42,8 @@ public class CartController {
     private CartItemService cartItemService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private CartUtils cartUtils;
 
     @PostMapping("/cart/add")
     public ResponseEntity<Void> addCart(@RequestParam("productId") Long productId, @RequestParam("colorName") String colorName,
@@ -52,7 +55,7 @@ public class CartController {
         if (this.cartService.checkCartByUser(user.getId()) == 0) {
             Cart cart = new Cart();
             cart.setUser(user);
-            cartService.createCart(cart);
+            cartService.createCart(cartUtils.mapCarttoCartDTO(cart));
         }
         ProductDetail productDetail = productDetailService.findProductDetailByColorNameAndSizeName(productId, colorName, sizeName);
         Cart cartFindByUser = cartService.findCartByUser(user);

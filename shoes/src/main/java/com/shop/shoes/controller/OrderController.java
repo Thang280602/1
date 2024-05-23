@@ -11,6 +11,8 @@ import com.shop.shoes.service.CartService;
 import com.shop.shoes.service.OrderDetailService;
 import com.shop.shoes.service.OrderService;
 import com.shop.shoes.service.UserService;
+import com.shop.shoes.util.OrderDetailUtils;
+import com.shop.shoes.util.OrderUtils;
 import com.shop.shoes.util.UserUtils;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,10 @@ public class OrderController {
     public CartItemService cartItemService;
     @Autowired
     public OrderDetailService orderDetailService;
-
+    @Autowired
+    public OrderUtils orderUtils;
+    @Autowired
+    public OrderDetailUtils orderDetailUtils;
     @PostMapping("/order/checkout")
     public ResponseEntity<Order> checkout(@RequestParam("userName") String userName,
                                           @RequestParam("addressShip") String addressShip,
@@ -61,7 +66,6 @@ public class OrderController {
         order.setTotalPrice(totalOrderPrice);
         order.setPhone(user.getPhoneNumber());
         this.orderService.create(order);
-
         for (CartItem cartItem : cartItems) {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(order);
