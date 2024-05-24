@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Set;
 
 @Data
 @Entity

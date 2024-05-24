@@ -31,14 +31,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findCartByUser(User user) {
-        return  this.cartRepository.findByUser(user).get(0);
+        return this.cartRepository.findByUser(user).get(0);
     }
 
     @Override
     public Cart createCart(CartDTO cartDTO) {
         try {
             Cart cart = cartUtils.mapCartDTOtoCart(cartDTO);
-            return  this.cartRepository.save(cart);
+            return this.cartRepository.save(cart);
         } catch (DataIntegrityViolationException e) {
             throw new CategoryNotFoundException(CategoryConstant.CATEGORY_ALREADY_EXITS);
         }

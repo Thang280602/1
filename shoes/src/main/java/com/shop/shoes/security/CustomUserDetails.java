@@ -14,13 +14,13 @@ import java.util.List;
 
 /**
  * @author ThangDH
- *
+ * <p>
  * Class cung cấp triển khai tùy chỉnh cho interface UserDetails.
  */
 @Data
 public class CustomUserDetails implements UserDetails {
 
-    private User user;// thằng này sẽ được lưu trong SecurityContext
+    private User user;// user sẽ được lưu trong SecurityContext
 
     public CustomUserDetails(User user) {
         this.user = user;

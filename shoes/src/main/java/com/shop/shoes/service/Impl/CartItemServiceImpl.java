@@ -1,7 +1,6 @@
 package com.shop.shoes.service.Impl;
 
 import com.shop.shoes.constant.CategoryConstant;
-import com.shop.shoes.dto.CartItemDTO;
 import com.shop.shoes.exception.domain.CategoryNotFoundException;
 import com.shop.shoes.exception.domain.ExceptionMessage;
 import com.shop.shoes.model.Cart;
@@ -15,7 +14,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

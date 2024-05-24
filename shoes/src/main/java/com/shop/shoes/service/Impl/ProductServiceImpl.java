@@ -1,6 +1,5 @@
 package com.shop.shoes.service.Impl;
 
-import com.shop.shoes.dto.CategoryDTO;
 import com.shop.shoes.dto.ProductDTO;
 import com.shop.shoes.exception.domain.ExceptionMessage;
 import com.shop.shoes.model.Category;
@@ -41,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(Long id) {
-        return  productRepository.findById(id)
+        return productRepository.findById(id)
                 .orElseThrow(() -> new ExceptionMessage("Không tìm thấy product có id trên"));
     }
 

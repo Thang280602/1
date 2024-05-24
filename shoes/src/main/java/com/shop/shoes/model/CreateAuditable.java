@@ -62,6 +62,7 @@ public abstract class CreateAuditable {
 
     /**
      * Method setter cho trường 'id'. Nó trả về 1 exception để ngăn việc đặt ID một cách thủ công
+     *
      * @param id ID được đặt (không được sử dụng do exception).
      * @throws UnsupportedOperationException nếu cố gắng đặt ID một cách thủ công.
      */

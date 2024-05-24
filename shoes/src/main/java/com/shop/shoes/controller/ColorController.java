@@ -25,6 +25,7 @@ import java.util.List;
 public class ColorController {
     @Autowired
     public final ColorService colorService;
+
     @Operation(summary = "Lấy danhh sách tất cả màu",
             description = "Trả về danh sách màu")
     @ApiResponses(value = {
@@ -34,6 +35,7 @@ public class ColorController {
         List<Color> colors = colorService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(colors);
     }
+
     @Operation(summary = "Thêm màu sắc",
             description = "Trả về màu sắc và thông tin message trạng thái")
     @ApiResponses(value = {

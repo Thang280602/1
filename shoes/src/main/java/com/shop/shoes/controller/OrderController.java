@@ -5,7 +5,6 @@ import com.shop.shoes.model.Cart;
 import com.shop.shoes.model.CartItem;
 import com.shop.shoes.model.Order;
 import com.shop.shoes.model.OrderDetail;
-import com.shop.shoes.model.Product;
 import com.shop.shoes.model.ProductDetail;
 import com.shop.shoes.model.User;
 import com.shop.shoes.service.CartItemService;
@@ -13,7 +12,6 @@ import com.shop.shoes.service.CartService;
 import com.shop.shoes.service.OrderDetailService;
 import com.shop.shoes.service.OrderService;
 import com.shop.shoes.service.ProductDetailService;
-import com.shop.shoes.service.ProductService;
 import com.shop.shoes.service.UserService;
 import com.shop.shoes.util.OrderDetailUtils;
 import com.shop.shoes.util.OrderUtils;
@@ -21,11 +19,9 @@ import com.shop.shoes.util.ProductDetailUtils;
 import com.shop.shoes.util.UserUtils;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,6 +55,7 @@ public class OrderController {
     public OrderDetailUtils orderDetailUtils;
     @Autowired
     public ProductDetailUtils productDetailUtils;
+
     @PostMapping("/order/checkout")
     public ResponseEntity<Order> checkout(@RequestParam("userName") String userName,
                                           @RequestParam("addressShip") String addressShip,
@@ -87,11 +84,11 @@ public class OrderController {
             orderDetail.setQuantity(cartItem.getQuantity());
             this.orderDetailService.add(orderDetail);
             ProductDetail productDetail = productDetailService.findById(cartItem.getProductDetail().getId());
-            productDetail.setQuantity(productDetail.getQuantity()-orderDetail.getQuantity());
-            productDetailService.updateProductDetail(productDetail.getId(),productDetailUtils.mapProductDetailToProductDetailDTO(productDetail));
+            productDetail.setQuantity(productDetail.getQuantity() - orderDetail.getQuantity());
+            productDetailService.updateProductDetail(productDetail.getId(), productDetailUtils.mapProductDetailToProductDetailDTO(productDetail));
         }
         this.cartItemService.deleteCartItemByCartId(cart.getId());
-        userService.sendOrderConfirmationEmail(user,order, getSiteURL(request));
+        userService.sendOrderConfirmationEmail(user, order, getSiteURL(request));
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 
@@ -115,21 +112,25 @@ public class OrderController {
         Order order = orderService.updateStatus(id);
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
+
     @GetMapping("/order/getById/{orderId}")
-    public ResponseEntity<Order> geOrderById(@PathVariable("orderId") Long id){
+    public ResponseEntity<Order> geOrderById(@PathVariable("orderId") Long id) {
         Order order = orderService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
+
     @GetMapping("/order")
-    public ResponseEntity<List<Order>> getAll(){
+    public ResponseEntity<List<Order>> getAll() {
         List<Order> orders = this.orderService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
+
     @PutMapping("/order/updateStatus/{orderId}")
-    public ResponseEntity<Order> updateOrder(@PathVariable("orderId") Long id,@RequestParam("status") Integer status){
-        Order order = orderService.update(id,status);
+    public ResponseEntity<Order> updateOrder(@PathVariable("orderId") Long id, @RequestParam("status") Integer status) {
+        Order order = orderService.update(id, status);
         return ResponseEntity.status(HttpStatus.OK).body(order);
     }
+
     private String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");

@@ -3,7 +3,6 @@ package com.shop.shoes.service.Impl;
 import com.shop.shoes.constant.UserConstant;
 import com.shop.shoes.dto.UserDTO;
 import com.shop.shoes.enumeration.RoleEnum;
-import com.shop.shoes.exception.domain.CategoryNotFoundException;
 import com.shop.shoes.exception.domain.UserNotFoundException;
 import com.shop.shoes.model.Order;
 import com.shop.shoes.model.Role;
@@ -20,7 +19,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +45,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private MessageSource messageSource;
+
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserUtils userUtils, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -68,12 +67,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO create(UserDTO userDTO,String siteURL) throws UnsupportedEncodingException, MessagingException{
-        if (userDTO.getId()!= null && userRepository.existsById(userDTO.getId())
-         ) {
+    public UserDTO create(UserDTO userDTO, String siteURL) throws UnsupportedEncodingException, MessagingException {
+        if (userDTO.getId() != null && userRepository.existsById(userDTO.getId())
+        ) {
             throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, null, Locale.getDefault()));
         }
-        if ( userRepository.existsByUsername(userDTO.getUsername())
+        if (userRepository.existsByUsername(userDTO.getUsername())
         ) {
             throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, null, Locale.getDefault()));
         }

@@ -30,7 +30,7 @@ import java.util.Arrays;
  */
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends Exception{
+public class SecurityConfig extends Exception {
 
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
@@ -40,6 +40,7 @@ public class SecurityConfig extends Exception{
 
     @Autowired
     private UserDetailsService userDetailsService;
+
     /**
      * Tạo 1 Bean cho SecurityFilterChain.
      * Sử dụng SecurityFilterChain caung cấp cấu hình cho Spring Security.
@@ -52,12 +53,12 @@ public class SecurityConfig extends Exception{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.disable())
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.OPTIONS,"/**")
+                    req.requestMatchers(HttpMethod.OPTIONS, "/**")
                             .permitAll();
-                    req.requestMatchers(HttpMethod.GET,"/users/*")
-                            .hasAnyRole(RoleEnum.USER.name(),RoleEnum.ADMIN.name());
-                     req.requestMatchers(HttpMethod.POST,"/users/add").permitAll();
-                    req.requestMatchers("/users","/users/**")
+                    req.requestMatchers(HttpMethod.GET, "/users/*")
+                            .hasAnyRole(RoleEnum.USER.name(), RoleEnum.ADMIN.name());
+                    req.requestMatchers(HttpMethod.POST, "/users/add").permitAll();
+                    req.requestMatchers("/users", "/users/**")
                             .hasAnyRole(RoleEnum.ADMIN.name());
                     req.anyRequest()
                             .permitAll();
@@ -73,10 +74,9 @@ public class SecurityConfig extends Exception{
     }
 
 
-
-
     /**
      * Bean để dùng quản lý các người dùng đã đăng nhập
+     *
      * @param config AuthenticationManager.class
      * @return AuthenticationManager object bean
      * @throws Exception

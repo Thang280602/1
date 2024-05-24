@@ -48,11 +48,12 @@ public class UserUtils {
                 .map(roleDTO -> modelMapper.map(roleDTO, Role.class))
                 .collect(Collectors.toList());
     }
-    public boolean validateUser(UserDTO userDTO){
+
+    public boolean validateUser(UserDTO userDTO) {
         LocalDate currentDate = LocalDate.now();
         LocalDate dateOfBirth = userDTO.getDateOfBirth();
         int age = Period.between(dateOfBirth, currentDate).getYears();
-        if(age<18){
+        if (age < 18) {
             return false;
         }
         return true;

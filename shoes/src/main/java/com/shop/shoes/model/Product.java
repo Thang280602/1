@@ -38,6 +38,6 @@ public class Product {
     private Boolean productStatus;
 
     @ManyToOne
-    @JoinColumn(name = "categoryId",referencedColumnName = "id")
+    @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private Category category;
 }

@@ -1,10 +1,7 @@
 package com.shop.shoes.service.Impl;
 
-import com.shop.shoes.constant.CategoryConstant;
 import com.shop.shoes.dto.ColorDTO;
-import com.shop.shoes.exception.domain.CategoryNotFoundException;
 import com.shop.shoes.exception.domain.ExceptionMessage;
-import com.shop.shoes.model.Category;
 import com.shop.shoes.model.Color;
 import com.shop.shoes.repository.ColorRepository;
 import com.shop.shoes.service.ColorService;

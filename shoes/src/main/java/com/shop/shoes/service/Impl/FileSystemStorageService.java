@@ -13,36 +13,36 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileSystemStorageService implements StorageService {
-	private final Path rootlocation;
-	public FileSystemStorageService() {
-		this.rootlocation=Paths.get("src/main/resources/static/uploads");
-	}
-	
-	@Override
-	public void store(MultipartFile file) {
-		try {
-			
-			Path destinationFile = this.rootlocation.resolve(
-					Paths.get(file.getOriginalFilename()))
-					.normalize().toAbsolutePath();
-			
-			try (InputStream inputStream = file.getInputStream()) {
-				Files.copy(inputStream, destinationFile,
-					StandardCopyOption.REPLACE_EXISTING);
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    private final Path rootlocation;
 
-	@Override
-	public void init() {
-	try {
-		Files.createDirectories(rootlocation);
-	} catch (Exception e) {
-	}
-		
-	}
+    public FileSystemStorageService() {
+        this.rootlocation = Paths.get("src/main/resources/static/uploads");
+    }
+
+    @Override
+    public void store(MultipartFile file) {
+        try {
+
+            Path destinationFile = this.rootlocation.resolve(
+                            Paths.get(file.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void init() {
+        try {
+            Files.createDirectories(rootlocation);
+        } catch (Exception e) {
+        }
+
+    }
 
 }

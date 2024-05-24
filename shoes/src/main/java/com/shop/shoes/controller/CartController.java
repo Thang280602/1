@@ -1,6 +1,5 @@
 package com.shop.shoes.controller;
 
-import com.shop.shoes.constant.UserConstant;
 import com.shop.shoes.dto.UserDTO;
 import com.shop.shoes.model.Cart;
 import com.shop.shoes.model.CartItem;
@@ -10,7 +9,6 @@ import com.shop.shoes.service.CartItemService;
 import com.shop.shoes.service.CartService;
 import com.shop.shoes.service.Impl.UserServiceImpl;
 import com.shop.shoes.service.ProductDetailService;
-import com.shop.shoes.service.ProductService;
 import com.shop.shoes.util.CartUtils;
 import com.shop.shoes.util.UserUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,6 +45,7 @@ public class CartController {
     private CartUtils cartUtils;
     @Autowired
     private MessageSource messageSource;
+
     @PostMapping("/cart/add")
     public ResponseEntity<Void> addCart(@RequestParam("productId") Long productId, @RequestParam("colorName") String colorName,
                                         @RequestParam("sizeName") String sizeName,
@@ -60,7 +59,7 @@ public class CartController {
             cartService.createCart(cartUtils.mapCarttoCartDTO(cart));
         }
         ProductDetail productDetail = productDetailService.findProductDetailByColorNameAndSizeName(productId, colorName, sizeName);
-        if(amount <= productDetail.getQuantity()) {
+        if (amount <= productDetail.getQuantity()) {
             Cart cartFindByUser = cartService.findCartByUser(user);
             CartItem cartItem = new CartItem();
             cartItem.setCart(cartFindByUser);
@@ -75,7 +74,7 @@ public class CartController {
                 this.cartItemService.create(cartItem);
             }
             return new ResponseEntity<>(HttpStatus.OK);
-        }else{
+        } else {
             throw new RuntimeException(messageSource.getMessage("exception.user.add_cart_error", null, Locale.getDefault()));
         }
     }
@@ -98,11 +97,12 @@ public class CartController {
         cartItemService.deleteCartItemById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     @PutMapping("/cart/updateCartItem")
-    public ResponseEntity<CartItem> updateCartItem(@RequestParam("id") Long id,@RequestParam("quantity") int quantity){
-        CartItem cartItem= cartItemService.findById(id);
+    public ResponseEntity<CartItem> updateCartItem(@RequestParam("id") Long id, @RequestParam("quantity") int quantity) {
+        CartItem cartItem = cartItemService.findById(id);
         cartItem.setQuantity(quantity);
-        cartItemService.update(cartItem,id);
+        cartItemService.update(cartItem, id);
         return ResponseEntity.status(HttpStatus.OK).body(cartItem);
     }
 

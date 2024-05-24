@@ -1,7 +1,6 @@
 package com.shop.shoes.controller;
 
 import com.shop.shoes.dto.SizeDTO;
-import com.shop.shoes.model.Color;
 import com.shop.shoes.model.Size;
 import com.shop.shoes.service.SizeSevice;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +25,7 @@ import java.util.List;
 public class SizeController {
     @Autowired
     public final SizeSevice sizeSevice;
+
     @Operation(summary = "Lấy danhh sách tất cả size",
             description = "Trả về danh sách size")
     @ApiResponses(value = {
@@ -35,6 +35,7 @@ public class SizeController {
         List<Size> sizes = sizeSevice.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(sizes);
     }
+
     @Operation(summary = "Thêm size",
             description = "Trả về size và thông tin message trạng thái")
     @ApiResponses(value = {

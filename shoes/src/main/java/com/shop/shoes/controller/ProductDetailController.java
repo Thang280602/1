@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -46,7 +45,7 @@ public class ProductDetailController {
     @Autowired
     public final StorageService storageService;
     @Autowired
-    public final  ImageProductSevice imageProductSevice;
+    public final ImageProductSevice imageProductSevice;
     @Autowired
     public final ImageProductUtils imageProductUtils;
     @Autowired
@@ -61,6 +60,7 @@ public class ProductDetailController {
         List<ProductDetail> productDetailDTO = productDetailService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
+
     @Operation(summary = "Lấy danhh sách tất cả chi tiết sản phẩm theo sản phẩm",
             description = "Trả về danh sách chi tiết sản phẩm theo sản phẩm")
     @ApiResponses(value = {
@@ -80,25 +80,28 @@ public class ProductDetailController {
         ProductDetail productDetailDTO = productDetailService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
+
     @Operation(summary = "Lấy sản phẩm theo color name và size name",
             description = "Trả về chi tiết sản phẩm")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trả về danh sách chi tiết sản phẩm")})
     @GetMapping("/findByColorNameAndSizeName")
-    public ResponseEntity<ProductDetail> findByColorNameAndSizeName(@RequestParam("productId") Long id , @RequestParam("colorName") String colorName, @RequestParam("sizeName") String sizeName) {
-        ProductDetail productDetailDTO = productDetailService.findProductDetailByColorNameAndSizeName(id,colorName, sizeName);
+    public ResponseEntity<ProductDetail> findByColorNameAndSizeName(@RequestParam("productId") Long id, @RequestParam("colorName") String colorName, @RequestParam("sizeName") String sizeName) {
+        ProductDetail productDetailDTO = productDetailService.findProductDetailByColorNameAndSizeName(id, colorName, sizeName);
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
+
     @Operation(summary = "Lấy sản phẩm theo color name và size name",
             description = "Trả về chi tiết sản phẩm")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trả về danh sách chi tiết sản phẩm")})
     @GetMapping("/findImageDescription")
-    public ResponseEntity<List<ImageProductDTO>> findImageDiscription(@RequestParam("productId") Long id , @RequestParam("colorName") String colorName, @RequestParam("sizeName") String sizeName) {
-        ProductDetail productDetailDTO = productDetailService.findProductDetailByColorNameAndSizeName(id,colorName, sizeName);
+    public ResponseEntity<List<ImageProductDTO>> findImageDiscription(@RequestParam("productId") Long id, @RequestParam("colorName") String colorName, @RequestParam("sizeName") String sizeName) {
+        ProductDetail productDetailDTO = productDetailService.findProductDetailByColorNameAndSizeName(id, colorName, sizeName);
         List<ImageProductDTO> imageProductDTO = this.imageProductSevice.findByProductDetail(productDetailDTO.getId());
         return ResponseEntity.status(HttpStatus.OK).body(imageProductDTO);
     }
+
     @Operation(summary = "Thêm  sản phẩm chi tiết",
             description = "Trả về sản phẩm chi tiết và thông tin message trạng thái")
     @ApiResponses(value = {

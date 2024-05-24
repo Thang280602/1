@@ -20,9 +20,7 @@ public enum RoleEnum {
 
     )),
     USER(Set.of(
-            PermissionEnum.USER_VIEW_USER_DETAILS,PermissionEnum.USER_VIEW_USER_GETBYUSERNAME))
-
-    ;
+            PermissionEnum.USER_VIEW_USER_DETAILS, PermissionEnum.USER_VIEW_USER_GETBYUSERNAME));
 
     @Getter
     private final Set<PermissionEnum> permissions;

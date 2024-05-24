@@ -31,7 +31,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Override
     public List<ProductDetail> getAll() {
         return productDetailRepository.findAll().stream()
-              .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
     @Override
     public ProductDetail findProductDetailByColorNameAndSizeName(Long id, String colorName, String sizeName) {
-            return productDetailRepository.findProductDetailByColorNameAndSizeName(id,colorName,sizeName);
+        return productDetailRepository.findProductDetailByColorNameAndSizeName(id, colorName, sizeName);
     }
 
 

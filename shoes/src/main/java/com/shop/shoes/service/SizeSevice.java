@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface SizeSevice {
     List<Size> getAll();
+
     Size create(SizeDTO sizeDTO);
 }

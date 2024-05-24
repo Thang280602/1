@@ -37,7 +37,7 @@ public class PayController {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-        long amount = calculateTotalAmount(order).longValue()*100;
+        long amount = calculateTotalAmount(order).longValue() * 100;
         String bankCode = "NCB";
 
         String vnp_TxnRef = PayConfig.getRandomNumber(8);
@@ -96,12 +96,13 @@ public class PayController {
         String vnp_SecureHash = PayConfig.hmacSHA512(PayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = PayConfig.vnp_PayUrl + "?" + queryUrl;
-       return paymentUrl;
+        return paymentUrl;
     }
+
     private BigDecimal calculateTotalAmount(Order order) {
         BigDecimal total = BigDecimal.ZERO;
-            BigDecimal price = BigDecimal.valueOf(order.getTotalPrice());
-            total = total.add(price);
+        BigDecimal price = BigDecimal.valueOf(order.getTotalPrice());
+        total = total.add(price);
         return total;
     }
 }

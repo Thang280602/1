@@ -77,7 +77,7 @@ public class PayConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(secretKey,sb.toString());
+        return hmacSHA512(secretKey, sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {

@@ -37,6 +37,7 @@ public class ProductController {
     public final ProductService productService;
     @Autowired
     public final StorageService storageService;
+
     @Operation(summary = "Lấy danhh sách tất cả sản phẩm",
             description = "Trả về danh sách sản phẩm")
     @ApiResponses(value = {
@@ -46,6 +47,7 @@ public class ProductController {
         List<Product> productDTO = productService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(productDTO);
     }
+
     @Operation(summary = "Lấy sản phẩm có id ",
             description = "Trả về danh sách sản phẩm")
     @ApiResponses(value = {
@@ -55,6 +57,7 @@ public class ProductController {
         Product productDTO = productService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(productDTO);
     }
+
     @Operation(summary = "Lấy danh sách 8 sản phẩm",
             description = "Trả về danh sách  sản phẩm")
     @ApiResponses(value = {
@@ -64,6 +67,7 @@ public class ProductController {
         List<Product> productDetailDTO = productService.getFirst8Products();
         return ResponseEntity.status(HttpStatus.OK).body(productDetailDTO);
     }
+
     @Operation(summary = "Thêm sản phẩm",
             description = "Trả về sản phẩm và thông tin message trạng thái")
     @ApiResponses(value = {
@@ -72,10 +76,10 @@ public class ProductController {
     })
     @Secured("ROLE_ADMIN")
     @PostMapping("/add")
-    public ResponseEntity<Product> create(@Valid @ModelAttribute ProductDTO productDTO,@RequestParam("fileImage") MultipartFile file) {
+    public ResponseEntity<Product> create(@Valid @ModelAttribute ProductDTO productDTO, @RequestParam("fileImage") MultipartFile file) {
         this.storageService.store(file);
         String fileName = file.getOriginalFilename();
-        Product responseDTO = productService.createProduct(productDTO,fileName);
+        Product responseDTO = productService.createProduct(productDTO, fileName);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
@@ -90,10 +94,10 @@ public class ProductController {
     @Parameters({@Parameter(name = "ProductDTO", description = "Thông tin cần update "),
             @Parameter(name = "id", description = "id của sản phẩm  cần update")})
     @PutMapping("/update/{id}")
-    public ResponseEntity<Product> updateProduct(@Valid @ModelAttribute ProductDTO productDTO, @PathVariable Long id ,@RequestParam("fileImage") MultipartFile file) {
+    public ResponseEntity<Product> updateProduct(@Valid @ModelAttribute ProductDTO productDTO, @PathVariable Long id, @RequestParam("fileImage") MultipartFile file) {
         String fileName = file.getOriginalFilename();
         this.storageService.store(file);
-        Product reponseDTO = productService.updateProduct(id, productDTO,fileName);
+        Product reponseDTO = productService.updateProduct(id, productDTO, fileName);
         return ResponseEntity.status(HttpStatus.OK).body(reponseDTO);
     }
 

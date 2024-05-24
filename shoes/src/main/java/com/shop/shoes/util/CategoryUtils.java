@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CategoryUtils {
     private final ModelMapper modelMapper;
-    public Category mapCategoryDtoToCategory(CategoryDTO categoryDTO){
+
+    public Category mapCategoryDtoToCategory(CategoryDTO categoryDTO) {
         return modelMapper.map(categoryDTO, Category.class);
     }
+
     public CategoryDTO mapCategorytoCategoryDto(Category category) {
         return modelMapper.map(category, CategoryDTO.class);
     }

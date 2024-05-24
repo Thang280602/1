@@ -28,7 +28,7 @@ public class CartItem {
     private Long id;
     private int quantity;
     @ManyToOne
-    @JoinColumn(name="cart_Id",referencedColumnName = "id")
+    @JoinColumn(name = "cart_Id", referencedColumnName = "id")
     private Cart cart;
     @ManyToOne
     @JoinColumn(name = "productItem_Id", referencedColumnName = "Id")

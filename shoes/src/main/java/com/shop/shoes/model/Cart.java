@@ -1,4 +1,5 @@
 package com.shop.shoes.model;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +27,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name="user_Id",referencedColumnName = "id")
+    @JoinColumn(name = "user_Id", referencedColumnName = "id")
     private User user;
 
 }

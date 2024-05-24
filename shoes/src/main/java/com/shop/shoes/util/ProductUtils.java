@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ProductUtils {
     private final ModelMapper modelMapper;
-    public Product mapProductDtotoProduct(ProductDTO productDTO){
+
+    public Product mapProductDtotoProduct(ProductDTO productDTO) {
         return modelMapper.map(productDTO, Product.class);
     }
+
     public ProductDTO mapProducttoProductDto(Product product) {
         return modelMapper.map(product, ProductDTO.class);
     }

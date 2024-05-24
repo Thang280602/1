@@ -5,8 +5,6 @@ import com.shop.shoes.model.Order;
 import com.shop.shoes.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +22,7 @@ import java.util.stream.Collectors;
 public class ChartController {
     @Autowired
     private OrderService orderService;
+
     @RequestMapping("/chart")
     public ResponseEntity<ChartData> getChartData() {
         List<Order> orders = orderService.getAll();
@@ -37,7 +36,7 @@ public class ChartController {
                         Collectors.counting()));
 
         // Tạo mảng labels và mảng data tương ứng
-        String[] labels = { "January", "February", "March", "April", "May", "June", "July","August","September","October","November","December" };
+        String[] labels = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         double[] totalPriceData = new double[labels.length];
         long[] totalOrdersData = new long[labels.length];
         for (int i = 0; i < labels.length; i++) {
@@ -50,6 +49,7 @@ public class ChartController {
         System.out.println(chartData);
         return ResponseEntity.ok(chartData);
     }
+
     private String getMonthFromDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -83,6 +83,7 @@ public class ChartController {
                 return "Invalid month";
         }
     }
+
     // Định nghĩa một lớp để chứa dữ liệu của biểu đồ
     private static class ChartData {
         private String[] labels;

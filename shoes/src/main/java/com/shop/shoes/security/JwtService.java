@@ -1,7 +1,6 @@
 package com.shop.shoes.security;
 
 
-
 import com.shop.shoes.constant.SecurityConstant;
 import com.shop.shoes.dto.TokenDTO;
 import io.jsonwebtoken.Claims;
@@ -27,23 +26,25 @@ import java.util.function.Function;
 public class JwtService {
 
     @Value("${application.jwt.secret}")
-    private String SECRET ;
+    private String SECRET;
 
     /**
      * Gen token
+     *
      * @param userName userName từ token
      * @return thành công trả về token
      */
-    public TokenDTO generateToken(String userName,String role) {
+    public TokenDTO generateToken(String userName, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
 //        claims.put("userId",id);
-        TokenDTO tokenDTO=TokenDTO.builder().token(createToken(claims, userName)).build();
+        TokenDTO tokenDTO = TokenDTO.builder().token(createToken(claims, userName)).build();
         return tokenDTO;
     }
 
     /**
      * Tạo token
+     *
      * @param claims
      * @param userName
      * @return
@@ -59,15 +60,17 @@ public class JwtService {
 
     /**
      * Lấy ra key từ secret
+     *
      * @return Key
      */
     private Key getSignKey() {
-        byte[] keyBytes= Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     /**
      * get username từ token
+     *
      * @param token
      * @return
      */
@@ -77,6 +80,7 @@ public class JwtService {
 
     /**
      * get thời hạn của token
+     *
      * @param token
      * @return
      */
@@ -86,10 +90,11 @@ public class JwtService {
 
     /**
      * Lấy ra 1 Claim từ token
+     *
      * @param token
      * @param claimsResolver
+     * @param <T>            kiểu dữ liệu truyền vào và trả về
      * @return
-     * @param <T> kiểu dữ liệu truyền vào và trả về
      */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -98,6 +103,7 @@ public class JwtService {
 
     /**
      * Lấy danh sách claim từ token
+     *
      * @param token
      * @return
      */
@@ -112,6 +118,7 @@ public class JwtService {
 
     /**
      * Kểm tra token còn hạn không
+     *
      * @param token String
      * @return true nếu còn, false nếu hết
      */
@@ -121,7 +128,8 @@ public class JwtService {
 
     /**
      * Kiểm tra token còn hợp lệ không
-     * @param token String
+     *
+     * @param token       String
      * @param userDetails
      * @return true nếu token hợp lệ , false ngợc lại
      */

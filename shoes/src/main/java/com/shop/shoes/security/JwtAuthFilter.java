@@ -30,8 +30,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     /**
      * Xử lý việc lấy và dọc token từ req nếu có sẽ chuyển thành UserDetail
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
+     *
+     * @param request     HttpServletRequest
+     * @param response    HttpServletResponse
      * @param filterChain FilterChain
      * @throws ServletException
      * @throws IOException

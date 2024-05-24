@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductDetailUtils {
     private final ModelMapper modelMapper;
-    public ProductDetailDTO mapProductDetailToProductDetailDTO(ProductDetail productDetail){
+
+    public ProductDetailDTO mapProductDetailToProductDetailDTO(ProductDetail productDetail) {
         return modelMapper.map(productDetail, ProductDetailDTO.class);
     }
-    public ProductDetail mapProductDetailDTOtoProductDetail(ProductDetailDTO productDetailDTO){
+
+    public ProductDetail mapProductDetailDTOtoProductDetail(ProductDetailDTO productDetailDTO) {
         return modelMapper.map(productDetailDTO, ProductDetail.class);
     }
 }

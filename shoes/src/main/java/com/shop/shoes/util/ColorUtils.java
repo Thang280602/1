@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ColorUtils {
     private final ModelMapper modelMapper;
-    public Color mapColorDTOtoColor(ColorDTO colorDTO){
+
+    public Color mapColorDTOtoColor(ColorDTO colorDTO) {
         return modelMapper.map(colorDTO, Color.class);
     }
+
     public ColorDTO mapColortoColorDTO(Color color) {
         return modelMapper.map(color, ColorDTO.class);
     }

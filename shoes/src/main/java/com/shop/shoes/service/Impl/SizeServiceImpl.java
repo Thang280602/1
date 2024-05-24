@@ -35,7 +35,7 @@ public class SizeServiceImpl implements SizeSevice {
         try {
             Size sizeSave = sizeRepository.save(size);
             return sizeSave;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ExceptionMessage("Không thêm được size");
         }
     }

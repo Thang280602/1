@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,12 +41,13 @@ public class CategoryController {
         List<CategoryDTO> categoryDTOS = categoryService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(categoryDTOS);
     }
+
     @Operation(summary = "Lấy  danh muc theo id",
             description = "Trả về danh sách danh muc")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trả về danh sách danh muc")})
     @GetMapping("/get/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryByID(@PathVariable  Long id) {
+    public ResponseEntity<CategoryDTO> getCategoryByID(@PathVariable Long id) {
         CategoryDTO categoryDTOS = categoryService.findCategoryById(id);
         return ResponseEntity.status(HttpStatus.OK).body(categoryDTOS);
     }

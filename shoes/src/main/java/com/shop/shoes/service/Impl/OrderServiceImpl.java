@@ -1,9 +1,7 @@
 package com.shop.shoes.service.Impl;
 
 import com.shop.shoes.constant.CategoryConstant;
-import com.shop.shoes.dto.OrderDTO;
 import com.shop.shoes.exception.domain.CategoryNotFoundException;
-import com.shop.shoes.model.Category;
 import com.shop.shoes.model.Order;
 import com.shop.shoes.model.User;
 import com.shop.shoes.repository.OrderRepository;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
@@ -24,6 +23,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private OrderUtils orderUtils;
+
     @Override
     public List<Order> getAll() {
         return orderRepository.findAll().stream().collect(Collectors.toList());
@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(4);
             return orderRepository.save(order);
 
-        }else {
+        } else {
             return null;
         }
 
@@ -72,13 +72,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findById(Long id) {
-        return  orderRepository.findById(id).orElseThrow(()->new CategoryNotFoundException(CategoryConstant.CATEGORY_NOT_FOUND));
+        return orderRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(CategoryConstant.CATEGORY_NOT_FOUND));
 
     }
 
     @Override
     public List<Order> finOrdersByStatus(Integer status, User user) {
-        return this.orderRepository.findOrderByStatusAndUser(status,user);
+        return this.orderRepository.findOrderByStatusAndUser(status, user);
 
     }
 }

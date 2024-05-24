@@ -41,7 +41,7 @@ public class UserDTO {
     @Email(message = "{" + UserConstant.EMAIL_NOT_VALID + "}")
     private String email;
 
-    @NotBlank(message = UserConstant.USERNAME_NOT_BLANK)
+    @NotBlank(message ="{" + UserConstant.USERNAME_NOT_BLANK + "}")
     private String username;
 
     @NotBlank(message = "{" + UserConstant.AUTHENTICATION_CODE_NOT_BLANK + "}")

@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SizeUtils {
     private final ModelMapper modelMapper;
-    public Size mapSizeDTOtoSize(SizeDTO sizeDTO){
+
+    public Size mapSizeDTOtoSize(SizeDTO sizeDTO) {
         return modelMapper.map(sizeDTO, Size.class);
     }
+
     public SizeDTO mapSizetoSizeDTO(Size size) {
         return modelMapper.map(size, SizeDTO.class);
     }
