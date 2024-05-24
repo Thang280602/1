@@ -19,19 +19,23 @@
                 {{ order.addressShip }}
             </div>
         </div>
-        <div class="status-update" style="margin-top: 20px; margin-left: 10%;">
-            <label for="orderStatus">Update Order Status:</label>
-            <select id="orderStatus" v-model="selectedStatus" @change="updateOrderStatus"
-                style="border: 1px solid black; border-radius: 8px;" class="select-dropdown">
-                <option value="" selected disabled>Choose status</option>
-                <option value="0">Chờ xác nhận</option>
-                <option value="1">Chờ lấy hàng</option>
-                <option value="2">Đang giao hàng</option>
-                <option value="3">Giao hàng thành công</option>
-                <option value="4">Đã hủy</option>
-            </select>
+        <div class="action" style="display: flex;">
+            <div class="status-update" style="margin-top: 20px; margin-left: 10%;">
+                <label for="orderStatus">Update Order Status:</label>
+                <select id="orderStatus" v-model="selectedStatus" @change="updateOrderStatus"
+                    style="border: 1px solid black; border-radius: 8px;" class="select-dropdown">
+                    <option value="" selected disabled>Choose status</option>
+                    <option value="0">Chờ xác nhận</option>
+                    <option value="1">Chờ lấy hàng</option>
+                    <option value="2">Đang giao hàng</option>
+                    <option value="3">Giao hàng thành công</option>
+                    <option value="4">Đã hủy</option>
+                </select>
+            </div>
+            <div class="exportPDF">
+                <button @click="exportPDF"><span>ExportPDF</span></button>
+            </div>
         </div>
-
 
     </div>
     <div class="tableCategory">
@@ -86,6 +90,7 @@ const route = useRoute();
 const router = useRouter();
 const order = ref(null);
 const orderDetails = ref([]);
+const exportPDFA = ref(null);
 const orderId = ref(route.params.id);
 console.log(orderId.value);
 
@@ -105,6 +110,27 @@ const getOrrderDetail = async () => {
         console.log(response.data);
     } catch (error) {
         console.error('Error:', error);
+    }
+};
+const exportPDF = async () => {
+    try {
+        const response = await axios.get(`http://localhost:8080/order/export/pdf/${orderId.value}`, {
+            responseType: 'blob'
+        });
+
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute('download', `order_${orderId.value}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+
+        console.log('PDF downloaded successfully');
+    } catch (error) {
+        console.error('Error exporting PDF:', error);
     }
 };
 const getFullImageUrl = (imagePath) => {
@@ -163,6 +189,41 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.exportPDF {
+    margin-top: 10px;
+    margin-left: 31%;
+}
+
+.exportPDF button {
+    background-color: #00d1d1;
+    /* Lighter Aqua */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.exportPDF button:hover {
+    background-color: #00b3b3;
+    /* Darker Aqua */
+    transform: scale(1.05);
+}
+
+.exportPDF button:active {
+    background-color: #009999;
+    /* Even Darker Aqua */
+    transform: scale(1);
+}
+
+.exportPDF span {
+    font-family: 'Arial', sans-serif;
+}
+
 .tableCategory {
     margin: 20px;
 }

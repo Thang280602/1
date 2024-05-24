@@ -73,7 +73,7 @@ onMounted(getOrrderDetail);
                     <div style="display: flex; justify-content: center;">
                         <div>
                             <div style="display: flex; justify-content: center; font-weight: bold; font-size: 40px">
-                                Shop CarForYou car sales shop
+                                Sports Shoe Shop DHT
                             </div>
                             <div style="margin-top: 5px; text-align: center">
                             </div>

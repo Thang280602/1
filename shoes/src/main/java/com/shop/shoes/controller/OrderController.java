@@ -1,6 +1,8 @@
 package com.shop.shoes.controller;
 
+import com.lowagie.text.DocumentException;
 import com.shop.shoes.dto.UserDTO;
+import com.shop.shoes.exportPDF.OrderDetailExportData;
 import com.shop.shoes.model.Cart;
 import com.shop.shoes.model.CartItem;
 import com.shop.shoes.model.Order;
@@ -19,6 +21,7 @@ import com.shop.shoes.util.ProductDetailUtils;
 import com.shop.shoes.util.UserUtils;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +32,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -135,4 +141,20 @@ public class OrderController {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
     }
+    @GetMapping("/order/export/pdf/{id}")
+    public void exportToPDF(HttpServletResponse response, @PathVariable("id") Long id) throws DocumentException, IOException {
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=order_" + currentDateTime + ".pdf";
+        response.setHeader(headerKey, headerValue);
+
+        Order order = this.orderService.findById(id);
+
+        OrderDetailExportData exporter = new OrderDetailExportData(order, orderDetailService);
+        exporter.export(response);
+    }
+
 }
