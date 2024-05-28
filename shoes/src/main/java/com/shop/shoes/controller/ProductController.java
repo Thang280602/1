@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -43,12 +46,16 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trả về danh sách sản phẩm")})
     @GetMapping("")
-    public ResponseEntity<List<Product>> getAll() {
-        List<Product> productDTO = productService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(productDTO);
+    public ResponseEntity<Page<Product>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productService.getAll(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(productPage);
     }
 
-    @Operation(summary = "Lấy sản phẩm có id ",
+        @Operation(summary = "Lấy sản phẩm có id ",
             description = "Trả về danh sách sản phẩm")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trả về danh sách sản phẩm")})

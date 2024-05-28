@@ -70,11 +70,11 @@ public class UserServiceImpl implements UserService {
     public UserDTO create(UserDTO userDTO, String siteURL) throws UnsupportedEncodingException, MessagingException {
         if (userDTO.getId() != null && userRepository.existsById(userDTO.getId())
         ) {
-            throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, null, Locale.getDefault()));
+            throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, new Object[]{userDTO.getUsername()}, Locale.getDefault()));
         }
         if (userRepository.existsByUsername(userDTO.getUsername())
         ) {
-            throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, null, Locale.getDefault()));
+            throw new IllegalArgumentException(messageSource.getMessage(UserConstant.USER_ALREADY_EXISTS, new Object[]{userDTO.getUsername()}, Locale.getDefault()));
         }
         List<Role> roles = Arrays.asList(roleRepository.findByRoleName(RoleEnum.USER).get());
         User user = userUtils.mapUserDtoToUser(userDTO);

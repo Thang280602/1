@@ -1,9 +1,12 @@
 package com.shop.shoes.dto;
 
+import com.shop.shoes.config.ValidPassword;
 import com.shop.shoes.constant.DateTimeConstant;
 import com.shop.shoes.constant.UserConstant;
+import com.shop.shoes.controller.ValidationGroups;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -20,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserDTO {
-
+    @NotNull(groups = ValidationGroups.Update.class)
     private Long id;
     @NotBlank( message = "{" + UserConstant.FIRST_NAME_NOT_BLANK + "}")
     private String firstName;
@@ -45,11 +48,7 @@ public class UserDTO {
     private String username;
 
     @NotBlank(message = "{" + UserConstant.AUTHENTICATION_CODE_NOT_BLANK + "}")
-    @Size(min = 8, message = "{" + UserConstant.AUTHENTICODE_NOT_VALID + "}")
-    @Pattern(regexp = ".*[A-Z].*", message = "{" + UserConstant.AUTHENTICODE_NOT_VALID + "}")
-    @Pattern(regexp = ".*[a-z].*", message = "{" + UserConstant.AUTHENTICODE_NOT_VALID + "}")
-    @Pattern(regexp = ".*\\d.*", message = "{" + UserConstant.AUTHENTICODE_NOT_VALID + "}")
-    @Pattern(regexp = ".*[!@#$%^&*()].*", message = "{" + UserConstant.AUTHENTICODE_NOT_VALID + "}")
+    @ValidPassword
     private String authenticationCode;
 
     private List<RoleDTO> roles;

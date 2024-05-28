@@ -24,11 +24,16 @@ const router = createRouter({
         {
           path: 'category',
           component: () => import('../pages/AdminCategory/category.vue'),
-          meta: { requiresAuth: true }, 
+          meta: { requiresAuth: true,type:'category' }, 
         },
         {
           path: 'add-category',
           component: () => import('../pages/AdminCategory/categoryAdd.vue'),
+          meta: { requiresAuth: true }, 
+        },
+        {
+          path: 'fileUpload',
+          component: () => import('../layouts/components/FileUpload.vue'),
           meta: { requiresAuth: true }, 
         },
         {
@@ -39,7 +44,7 @@ const router = createRouter({
         {
           path: 'product',
           component: () => import('../pages/AdminProduct/product.vue'),
-          meta: { requiresAuth: true },
+          meta: { requiresAuth: true,type:'product' },
         },
         {
           path: 'order',

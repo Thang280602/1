@@ -29,6 +29,15 @@
     border-radius: 5px;
 }
 
+
+
+
+.file-upload {
+    /* Ensure no rules here override the component's dimensions */
+    width: 100%;
+    /* Or any other rule that ensures it expands correctly */
+}
+
 .buttonDelete {
     background-color: red;
     width: 50%;

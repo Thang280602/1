@@ -40,4 +40,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private Category category;
+
+
 }

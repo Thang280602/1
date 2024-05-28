@@ -24,6 +24,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,7 +100,7 @@ public class UserController {
         List<RoleEnum> roles = customUserDetails.getUser().getRoles().stream().map(role -> role.getRoleName()).toList();
 
         if (roles.contains(RoleEnum.USER) && (!id.get().equals(customUserDetails.getUser().getId()))) {
-            throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_MESSAGE_NOT_FOUND, null, Locale.getDefault()));
+            throw new UserNotFoundException(messageSource.getMessage(UserConstant.USER_MESSAGE_NOT_FOUND,null , Locale.getDefault()));
         }
         UserDTO userDTO = userService.getById(id.orElseThrow(() -> new UserNotFoundException("ID không hợp lệ")));
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
@@ -125,7 +126,7 @@ public class UserController {
     })
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDTO> insertUser(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
+    public ResponseEntity<UserDTO> insertUser(@Validated(ValidationGroups.Insert.class) @RequestBody UserDTO userDTO, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
 
         UserDTO userDTONew = userService.create(userDTO, getSiteURL(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(userDTONew);
@@ -145,7 +146,7 @@ public class UserController {
             @Parameter(name = "id", description = "id của user câần update")})
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable Long id) throws Exception {
+    public ResponseEntity<UserDTO> updateUser(@Validated(ValidationGroups.Update.class) @RequestBody UserDTO userDTO, @PathVariable Long id) throws Exception {
         UserDTO userDTO1 = userService.update(id, userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(userDTO1);
     }

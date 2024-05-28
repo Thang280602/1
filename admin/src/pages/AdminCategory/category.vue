@@ -1,7 +1,14 @@
 <template>
-    <div class="buttonAdd">
-        <a href="/add-category"><span>Add</span></a>
+
+    <div class="head" style="display: flex;justify-content: space-around;align-items: center;">
+        <div class="buttonAdd">
+            <a href="/add-category"><span>Add</span></a>
+        </div>
+        <FileUpload :type="$route.meta.type" />
+
     </div>
+
+
     <div class="tableCategory">
         <VTable>
             <thead>
@@ -55,7 +62,9 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
+import FileUpload from '../../layouts/components/FileUpload.vue';
 export default {
+    components: { FileUpload },
     data() {
         return {
             categories: []

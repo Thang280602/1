@@ -15,4 +15,9 @@ public class CategoryDTO {
     private Long id;
     private boolean categoryStatus;
     private String categoryName;
+
+    public CategoryDTO(String categoryName, Boolean categoryStatus) {
+        this.categoryName=categoryName;
+        this.categoryStatus=categoryStatus;
+    }
 }
